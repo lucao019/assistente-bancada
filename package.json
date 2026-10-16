@@ -1,18 +1,78 @@
-﻿{
+{
   "name": "assistente-bancada",
   "version": "0.1.0",
   "description": "IA local para diagnósticos eletrônicos",
-  "main": "src/server.js",
+  "main": "main.cjs",
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "electron": "electron .",
+    "build": "electron-builder --win --x64"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.8",
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
-    "better-sqlite3": "^11.3.0",
-    "cors": "^2.8.5"
+    "sql.js": "^1.15.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true,
+    "electron-winstaller@5.4.0": true
+  },
+  "devDependencies": {
+    "electron": "^44.8.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.bancada.assistente",
+    "productName": "Assistente de Bancada",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "src/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "public/icon.ico"
+    },
+    "extraResources": [
+      {
+        "from": "H:/IA/llama",
+        "to": "ia/llama",
+        "filter": [
+          "llama-server.exe",
+          "*.dll"
+        ]
+      },
+      {
+        "from": "H:/IA/models/qwen2.5-vl-3b",
+        "to": "ia/models/qwen2.5-vl-3b"
+      },
+      {
+        "from": "H:/IA/ocr",
+        "to": "ia/ocr",
+        "filter": [
+          "tesseract.exe",
+          "*.dll"
+        ]
+      },
+      {
+        "from": "H:/IA/poppler/poppler-26.09.0/Library/bin",
+        "to": "ia/poppler/poppler-26.09.0/Library/bin",
+        "filter": [
+          "pdftoppm.exe",
+          "pdfinfo.exe",
+          "*.dll"
+        ]
+      }
+    ]
   }
 }

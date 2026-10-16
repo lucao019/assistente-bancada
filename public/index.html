@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente de Bancada</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #212121;
+      --sidebar:  #171717;
+      --surface:  #2f2f2f;
+      --border:   #3a3a3a;
+      --text:     #ececec;
+      --muted:    #8e8ea0;
+      --accent:   #10a37f;
+      --user-bg:  #2f2f2f;
+      --bot-bg:   transparent;
+      --input-bg: #2f2f2f;
+      --danger:   #ef4444;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      transition: width 0.2s, opacity 0.2s;
+    }
+    .sidebar.collapsed { width: 0; opacity: 0; overflow: hidden; border: none; }
+
+    .sidebar-top {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-new {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-new:hover { background: var(--surface); }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .list-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 8px 8px 4px;
+    }
+
+    .ap-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.1s;
+      position: relative;
+      group: true;
+    }
+    .ap-item:hover { background: var(--surface); }
+    .ap-item.active { background: #1a3a2a; border-color: #1e4d38; }
+
+    .ap-item-icon { font-size: 1rem; flex-shrink: 0; }
+    .ap-item-info { flex: 1; min-width: 0; }
+    .ap-item-nome { font-size: 0.84rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ap-item-sub  { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+
+    .ap-item-actions {
+      display: none;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .ap-item:hover .ap-item-actions,
+    .ap-item.active .ap-item-actions { display: flex; }
+
+    .ap-item-actions button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 3px 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      line-height: 1;
+    }
+    .ap-item-actions button:hover { color: var(--text); background: var(--border); }
+    .ap-item-actions button.del:hover { color: var(--danger); }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .topbar-toggle {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .topbar-toggle:hover { color: var(--text); background: var(--surface); }
+
+    .topbar-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-badge {
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: 5px;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Conteúdo em duas colunas ── */
+    .content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Painel imagem ── */
+    .img-panel {
+      width: 380px;
+      min-width: 240px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--sidebar);
+    }
+
+    .img-panel-toolbar {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .mode-tab {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 7px;
+      padding: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .mode-tab.active {
+      background: #1a3a2a;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .drop-zone {
+      border: 1.5px dashed var(--border);
+      border-radius: 8px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: all 0.2s;
+      line-height: 1.7;
+    }
+    .drop-zone:hover { border-color: #555; color: var(--text); }
+    .drop-zone.dragover { border-color: var(--accent); color: var(--accent); background: #1a3a2a22; }
+    .drop-zone b { color: var(--accent); }
+    #fileInput { display: none; }
+
+    .page-nav {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-nav.visible { display: flex; }
+    .page-nav button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+    .page-nav button:hover:not(:disabled) { border-color: #555; }
+    .page-nav button:disabled { opacity: 0.3; cursor: default; }
+    .page-nav span { flex: 1; text-align: center; font-size: 0.8rem; color: var(--muted); }
+
+    .img-preview {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12px;
+    }
+    #previewImg {
+      max-width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .img-placeholder {
+      margin: auto;
+      text-align: center;
+      color: var(--border);
+      font-size: 0.8rem;
+      line-height: 2.2;
+    }
+    .img-placeholder-icon { font-size: 2rem; opacity: 0.3; }
+
+    /* ── Chat ── */
+    .chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .msg-wrap {
+      padding: 20px 0;
+      border-bottom: 1px solid #2a2a2a22;
+    }
+    .msg-wrap.user { background: var(--user-bg); }
+    .msg-wrap.assistant { background: var(--bot-bg); }
+
+    .msg-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .msg-wrap.user .msg-avatar      { background: #5563e2; }
+    .msg-wrap.assistant .msg-avatar { background: var(--accent); }
+
+    .msg-content {
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg-wrap.system {
+      padding: 6px 0;
+      background: transparent;
+      border: none;
+    }
+    .msg-wrap.system .msg-inner {
+      justify-content: center;
+    }
+    .msg-wrap.system .msg-content {
+      font-size: 0.72rem;
+      color: var(--border);
+      text-align: center;
+      flex: none;
+    }
+
+    /* Imagem inline na mensagem */
+    .msg-image {
+      margin-top: 8px;
+      max-width: 260px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .msg-content code {
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.82em;
+    }
+    .msg-content pre {
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin: 6px 0;
+      overflow-x: auto;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.82em;
+      line-height: 1.5;
+    }
+    .msg-content pre code { background: none; border: none; padding: 0; }
+
+    /* Typing dots */
+    .typing span {
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--muted); margin: 0 2px;
+      animation: blink 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0%,80%,100% { transform: translateY(0); opacity: 0.5; }
+      40%          { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* ── Input area ── */
+    .input-area {
+      padding: 16px 24px 20px;
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .input-box {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .input-box:focus-within { border-color: #555; }
+
+    /* Preview de imagem dentro da caixa de input */
+    .input-img-preview {
+      display: none;
+      padding: 10px 14px 0;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-img-preview.visible { display: flex; }
+    .input-img-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .input-img-name { font-size: 0.78rem; color: var(--muted); flex: 1; }
+    .input-img-remove {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .input-img-remove:hover { color: var(--danger); }
+
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      padding: 4px 8px 4px 14px;
+      gap: 4px;
+    }
+
+    textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      padding: 10px 4px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: none;
+      min-height: 44px;
+      max-height: 200px;
+      line-height: 1.6;
+      outline: none;
+    }
+    textarea::placeholder { color: var(--muted); }
+    textarea:disabled { opacity: 0.4; }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-bottom: 4px;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 7px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      transition: all 0.15s;
+    }
+    .btn-icon:hover { color: var(--text); background: var(--border); }
+
+    .btn-send {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      padding: 7px 9px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .btn-send:hover:not(:disabled) { background: #0d8a6a; }
+    .btn-send:disabled { opacity: 0.3; cursor: default; }
+
+    .input-hint {
+      max-width: 720px;
+      margin: 6px auto 0;
+      font-size: 0.68rem;
+      color: var(--border);
+      text-align: center;
+    }
+
+    /* ── Menu de contexto ── */
+    #ctxMenu {
+      position: fixed;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 4px;
+      z-index: 9999;
+      min-width: 190px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      display: none;
+    }
+    #ctxMenu button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.84rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #ctxMenu button:hover { background: var(--border); }
+    #ctxMenu hr { border: none; border-top: 1px solid var(--border); margin: 3px 0; }
+
+    /* ── Modal ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+    .overlay.hidden { display: none; }
+
+    .modal {
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      width: 400px;
+      max-width: 94vw;
+    }
+    .modal h2 { font-size: 1.05rem; margin-bottom: 20px; color: #fff; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 5px; }
+    .field input, .field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 70px; }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .btn-ghost {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { background: var(--border); }
+    .btn-primary {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #0d8a6a; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--muted);
+    }
+    .empty-state-icon { font-size: 2.5rem; opacity: 0.4; }
+    .empty-state h2 { font-size: 1.1rem; color: var(--text); font-weight: 500; }
+    .empty-state p { font-size: 0.84rem; text-align: center; max-width: 280px; line-height: 1.6; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <button class="btn-new" id="btnNovo">
+      <span>✏️</span> Novo aparelho
+    </button>
+  </div>
+  <div class="sidebar-list" id="aparelhosList">
+    <div class="list-label">Recentes</div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <button class="topbar-toggle" id="btnToggle">☰</button>
+    <div class="topbar-title" id="topTitle">Assistente de Bancada 🔧</div>
+    <div class="topbar-badge" id="topBadge" style="display:none"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- Painel imagem -->
+    <div class="img-panel">
+      <div class="img-panel-toolbar">
+        <div class="mode-tabs">
+          <div class="mode-tab active" id="tabImg" onclick="setMode('image')">🖼️ Imagem</div>
+          <div class="mode-tab" id="tabPdf" onclick="setMode('pdf')">📄 PDF</div>
+        </div>
+        <div class="drop-zone" id="dropZone">
+          🖼️ Arraste, clique<br>ou <b>Ctrl+V</b> para colar
+          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>
+        </div>
+        <div class="page-nav" id="pageNav">
+          <button id="btnPrev" disabled>‹</button>
+          <span id="pageInfo">— / —</span>
+          <button id="btnNext" disabled>›</button>
+          <button id="btnPin" disabled style="font-size:0.72rem;padding:5px 8px;">📌 Usar</button>
+        </div>
+      </div>
+      <div class="img-preview">
+        <div class="img-placeholder" id="imgPH">
+          <div class="img-placeholder-icon">🖼️</div>
+          Nenhuma imagem carregada
+        </div>
+        <img id="previewImg" alt="Preview"/>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat" id="chatPanel">
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">🔧</div>
+        <h2>Assistente de Bancada</h2>
+        <p>Selecione um aparelho na sidebar ou crie um novo para começar a conversa.</p>
+      </div>
+
+      <!-- Mensagens -->
+      <div class="messages" id="messages" style="display:none"></div>
+
+      <!-- Input -->
+      <div class="input-area" id="inputArea" style="display:none">
+        <div class="input-box">
+          <div class="input-img-preview" id="inputImgPreview">
+            <img class="input-img-thumb" id="inputImgThumb" src="" alt=""/>
+            <span class="input-img-name" id="inputImgName"></span>
+            <button class="input-img-remove" id="btnRemoveImg" title="Remover imagem">✕</button>
+          </div>
+          <div class="input-row">
+            <textarea id="questionInput" placeholder="Pergunte sobre o aparelho..." rows="1" disabled></textarea>
+            <div class="input-actions">
+              <button class="btn-icon" id="btnAttach" title="Anexar imagem">📎</button>
+              <button class="btn-send" id="sendBtn" disabled title="Enviar (Enter)">➤</button>
+            </div>
+          </div>
+        </div>
+        <div class="input-hint">Enter para enviar · Shift+Enter para nova linha · Ctrl+V para colar imagem</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Menu de contexto -->
+<div id="ctxMenu">
+  <button id="ctxPesquisar">🔍 Pesquisar sobre isso</button>
+  <button id="ctxCopiar">📋 Copiar texto</button>
+</div>
+
+<!-- Modal novo aparelho -->
+<div class="overlay hidden" id="overlay">
+  <div class="modal">
+    <h2>📱 Novo aparelho</h2>
+    <div class="field">
+      <label>Nome / defeito *</label>
+      <input type="text" id="inpNome" placeholder="Ex: Redmi Note 10s — sem carga"/>
+    </div>
+    <div class="field">
+      <label>Modelo / codename</label>
+      <input type="text" id="inpModelo" placeholder="Ex: Rosemary"/>
+    </div>
+    <div class="field">
+      <label>Observações iniciais</label>
+      <textarea id="inpNotas" placeholder="Ex: cliente relatou queda, não liga..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="btnCancelar">Cancelar</button>
+      <button class="btn-primary" id="btnConfirmar">Iniciar conversa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Estado ──────────────────────────────────────────────────────────────────
+let sessionId   = null
+let aparelhoId  = null
+let aparelhoNome = ''
+let pageCount   = 0
+let currentPage = 1
+let contextPage = null
+let isLoading   = false
+let mode        = 'image'
+let pendingImageFile   = null  // arquivo aguardando envio junto com a mensagem
+let pendingImageBase64 = null  // preview base64
+
+// ── Elementos ────────────────────────────────────────────────────────────────
+const sidebar       = document.getElementById('sidebar')
+const btnToggle     = document.getElementById('btnToggle')
+const btnNovo       = document.getElementById('btnNovo')
+const topTitle      = document.getElementById('topTitle')
+const topBadge      = document.getElementById('topBadge')
+const dropZone      = document.getElementById('dropZone')
+const pageNav       = document.getElementById('pageNav')
+const btnPrev       = document.getElementById('btnPrev')
+const btnNext       = document.getElementById('btnNext')
+const btnPin        = document.getElementById('btnPin')
+const pageInfo      = document.getElementById('pageInfo')
+const previewImg    = document.getElementById('previewImg')
+const imgPH         = document.getElementById('imgPH')
+const emptyState    = document.getElementById('emptyState')
+const messagesEl    = document.getElementById('messages')
+const inputArea     = document.getElementById('inputArea')
+const questionInput = document.getElementById('questionInput')
+const sendBtn       = document.getElementById('sendBtn')
+const btnAttach     = document.getElementById('btnAttach')
+const inputImgPrev  = document.getElementById('inputImgPreview')
+const inputImgThumb = document.getElementById('inputImgThumb')
+const inputImgName  = document.getElementById('inputImgName')
+const btnRemoveImg  = document.getElementById('btnRemoveImg')
+const ctxMenu       = document.getElementById('ctxMenu')
+
+// ── Sidebar toggle ───────────────────────────────────────────────────────────
+btnToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'))
+
+// ── Aparelhos ────────────────────────────────────────────────────────────────
+async function carregarAparelhos() {
+  const res  = await fetch('/api/aparelhos')
+  const list = await res.json()
+  renderAparelhos(list)
+}
+
+function renderAparelhos(list) {
+  const el = document.getElementById('aparelhosList')
+  if (!list.length) {
+    el.innerHTML = '<div class="list-label">Recentes</div><div style="padding:16px 8px;font-size:0.78rem;color:var(--border)">Nenhum aparelho ainda</div>'
+    return
+  }
+  el.innerHTML = '<div class="list-label">Recentes</div>' + list.map(ap => `
+    <div class="ap-item ${ap.id == aparelhoId ? 'active' : ''}" onclick="abrirAparelho(${ap.id})">
+      <div class="ap-item-icon">📱</div>
+      <div class="ap-item-info">
+        <div class="ap-item-nome" title="${esc(ap.nome)}">${esc(ap.nome)}</div>
+        <div class="ap-item-sub">${ap.modelo ? esc(ap.modelo) + ' · ' : ''}${ap.total_msgs || 0} msgs</div>
+      </div>
+      <div class="ap-item-actions">
+        <button onclick="event.stopPropagation();limparChat(${ap.id})" title="Limpar chat">🗑</button>
+        <button class="del" onclick="event.stopPropagation();deletarAparelho(${ap.id})" title="Remover">✕</button>
+      </div>
+    </div>
+  `).join('')
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+btnNovo.addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('hidden')
+  document.getElementById('inpNome').focus()
+})
+document.getElementById('btnCancelar').addEventListener('click', fecharModal)
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) fecharModal()
+})
+document.getElementById('btnConfirmar').addEventListener('click', criarAparelho)
+document.getElementById('inpNome').addEventListener('keydown', e => { if (e.key === 'Enter') criarAparelho() })
+
+function fecharModal() {
+  document.getElementById('overlay').classList.add('hidden')
+  document.getElementById('inpNome').value = ''
+  document.getElementById('inpModelo').value = ''
+  document.getElementById('inpNotas').value = ''
+}
+
+async function criarAparelho() {
+  const nome   = document.getElementById('inpNome').value.trim()
+  const modelo = document.getElementById('inpModelo').value.trim()
+  const notas  = document.getElementById('inpNotas').value.trim()
+  if (!nome) { document.getElementById('inpNome').focus(); return }
+
+  const res  = await fetch('/api/aparelhos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome, modelo, notas })
+  })
+  const data = await res.json()
+  fecharModal()
+  iniciarSessao(data.aparelho, data.sessionId, [])
+  carregarAparelhos()
+}
+
+async function abrirAparelho(id) {
+  const res  = await fetch(`/api/aparelhos/${id}/abrir`, { method: 'POST' })
+  const data = await res.json()
+  iniciarSessao(data.aparelho, data.sessionId, data.history)
+  carregarAparelhos()
+}
+
+async function limparChat(id) {
+  if (!confirm('Limpar todo o histórico desse aparelho?')) return
+  await fetch(`/api/aparelhos/${id}/conversa`, { method: 'DELETE' })
+  if (id == aparelhoId) {
+    messagesEl.innerHTML = ''
+    addMsg('system', 'Histórico limpo.')
+  }
+  carregarAparelhos()
+}
+
+async function deletarAparelho(id) {
+  if (!confirm('Remover esse aparelho?')) return
+  await fetch(`/api/aparelhos/${id}`, { method: 'DELETE' })
+  if (id == aparelhoId) {
+    sessionId   = null
+    aparelhoId  = null
+    showEmpty()
+  }
+  carregarAparelhos()
+}
+
+function iniciarSessao(aparelho, sid, history) {
+  sessionId    = sid
+  aparelhoId   = aparelho.id
+  aparelhoNome = aparelho.nome
+
+  topTitle.textContent = '🔧 ' + aparelho.nome
+  topBadge.textContent = aparelho.modelo || ''
+  topBadge.style.display = aparelho.modelo ? 'block' : 'none'
+
+  // Mostra chat
+  emptyState.style.display = 'none'
+  messagesEl.style.display = 'flex'
+  messagesEl.style.flexDirection = 'column'
+  inputArea.style.display  = 'block'
+  questionInput.disabled   = false
+  sendBtn.disabled         = false
+
+  messagesEl.innerHTML = ''
+
+  if (history && history.length) {
+    history.forEach(m => {
+      if (m.role === 'user' || m.role === 'assistant') {
+        addMsg(m.role, m.content)
+      }
+    })
+    addMsg('system', '── histórico anterior ──')
+  } else {
+    const saudacao = aparelho.notas
+      ? `Olá! Aparelho: **${aparelho.nome}**${aparelho.modelo ? ' (' + aparelho.modelo + ')' : ''}.\nObservações: ${aparelho.notas}\n\nComo posso ajudar?`
+      : `Olá! Aparelho: **${aparelho.nome}**${aparelho.modelo ? ' (' + aparelho.modelo + ')' : ''}. Como posso ajudar?`
+    addMsg('assistant', saudacao)
+  }
+
+  questionInput.focus()
+}
+
+function showEmpty() {
+  emptyState.style.display = 'flex'
+  messagesEl.style.display = 'none'
+  inputArea.style.display  = 'none'
+  topTitle.textContent     = 'Assistente de Bancada 🔧'
+  topBadge.style.display   = 'none'
+}
+
+// ── Modo imagem/PDF ───────────────────────────────────────────────────────────
+function setMode(m) {
+  mode = m
+  document.getElementById('tabImg').classList.toggle('active', m === 'image')
+  document.getElementById('tabPdf').classList.toggle('active', m === 'pdf')
+  pageNav.classList.toggle('visible', m === 'pdf')
+
+  if (m === 'image') {
+    dropZone.innerHTML = '🖼️ Arraste, clique<br>ou <b>Ctrl+V</b> para colar<input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>'
+    imgPH.innerHTML = '<div class="img-placeholder-icon">🖼️</div>Nenhuma imagem carregada'
+  } else {
+    dropZone.innerHTML = '📄 Arraste o PDF aqui<br>ou clique para selecionar<input type="file" id="fileInput" accept=".pdf"/>'
+    imgPH.innerHTML = '<div class="img-placeholder-icon">📄</div>Nenhum PDF carregado'
+  }
+
+  previewImg.style.display = 'none'
+  imgPH.style.display = 'block'
+  rebindFileInput()
+}
+
+function rebindFileInput() {
+  const fi = document.getElementById('fileInput')
+  if (fi) fi.addEventListener('change', onFileChange)
+}
+
+// ── Drop zone ─────────────────────────────────────────────────────────────────
+dropZone.addEventListener('click', () => document.getElementById('fileInput')?.click())
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover') })
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'))
+dropZone.addEventListener('drop', e => {
+  e.preventDefault()
+  dropZone.classList.remove('dragover')
+  const file = e.dataTransfer.files[0]
+  if (!file) return
+  mode === 'image' ? receberImagem(file) : uploadPdf(file)
+})
+document.getElementById('fileInput').addEventListener('change', onFileChange)
+
+function onFileChange() {
+  const f = document.getElementById('fileInput')?.files[0]
+  if (f) mode === 'image' ? receberImagem(f) : uploadPdf(f)
+}
+
+// Botão de anexar (abre seletor de arquivo)
+btnAttach.addEventListener('click', () => document.getElementById('fileInput')?.click())
+
+// Ctrl+V — colar imagem
+document.addEventListener('paste', e => {
+  if (mode !== 'image') return
+  const items = e.clipboardData?.items
+  if (!items) return
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      const file  = item.getAsFile()
+      const named = new File([file], `colado-${Date.now()}.png`, { type: file.type })
+      receberImagem(named)
+      break
+    }
+  }
+})
+
+// ── Receber imagem ─────────────────────────────────────────────────────────────
+// A imagem fica "pendente" e é enviada junto com a próxima mensagem
+function receberImagem(file) {
+  pendingImageFile = file
+
+  // Preview no painel esquerdo
+  const url = URL.createObjectURL(file)
+  previewImg.src = url
+  previewImg.style.display = 'block'
+  imgPH.style.display = 'none'
+  dropZone.innerHTML = `🖼️ ${file.name}<input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>`
+  rebindFileInput()
+
+  // Preview no input
+  inputImgThumb.src = url
+  inputImgName.textContent = file.name
+  inputImgPrev.classList.add('visible')
+
+  // Guarda base64 para mostrar na bolha de mensagem
+  const reader = new FileReader()
+  reader.onload = e => { pendingImageBase64 = e.target.result }
+  reader.readAsDataURL(file)
+}
+
+btnRemoveImg.addEventListener('click', () => {
+  pendingImageFile   = null
+  pendingImageBase64 = null
+  inputImgPrev.classList.remove('visible')
+  inputImgThumb.src = ''
+})
+
+async function uploadPdf(file) {
+  dropZone.textContent = '⏳ Carregando...'
+  const formData = new FormData()
+  formData.append('pdf', file)
+  if (sessionId) formData.append('sessionId', sessionId)
+
+  try {
+    const res  = await fetch('/api/pdf/upload', { method: 'POST', body: formData })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+    if (!sessionId) sessionId = data.sessionId
+    pageCount   = data.pageCount
+    currentPage = 1
+    btnPrev.disabled = false
+    btnNext.disabled = false
+    btnPin.disabled  = false
+    dropZone.innerHTML = `📄 ${file.name}<input type="file" id="fileInput" accept=".pdf"/>`
+    rebindFileInput()
+    addMsg('system', `PDF carregado: ${file.name} (${pageCount} páginas)`)
+    loadPage(1)
+  } catch (err) {
+    dropZone.innerHTML = '📄 Arraste o PDF aqui<br>ou clique para selecionar<input type="file" id="fileInput" accept=".pdf"/>'
+    rebindFileInput()
+    addMsg('system', `Erro: ${err.message}`)
+  }
+}
+
+// ── Navegação PDF ─────────────────────────────────────────────────────────────
+btnPrev.addEventListener('click', () => loadPage(currentPage - 1))
+btnNext.addEventListener('click', () => loadPage(currentPage + 1))
+btnPin.addEventListener('click', () => {
+  contextPage = currentPage
+  addMsg('system', `Página ${contextPage} fixada no contexto.`)
+})
+
+async function loadPage(page) {
+  if (!sessionId || page < 1 || page > pageCount) return
+  currentPage = page
+  pageInfo.textContent = `${page} / ${pageCount}`
+  btnPrev.disabled = page <= 1
+  btnNext.disabled = page >= pageCount
+
+  previewImg.style.display = 'none'
+  imgPH.style.display = 'block'
+  imgPH.innerHTML = '<div class="img-placeholder-icon">⏳</div>Carregando...'
+
+  previewImg.src = `/api/pdf/${sessionId}/page/${page}/image?t=${Date.now()}`
+  previewImg.onload  = () => { previewImg.style.display = 'block'; imgPH.style.display = 'none' }
+  previewImg.onerror = () => { imgPH.innerHTML = '<div>❌ Erro ao carregar</div>' }
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────────
+sendBtn.addEventListener('click', () => enviar())
+questionInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar() }
+})
+questionInput.addEventListener('input', () => {
+  questionInput.style.height = 'auto'
+  questionInput.style.height = Math.min(questionInput.scrollHeight, 200) + 'px'
+})
+
+async function enviar(overrideQ) {
+  const question = overrideQ || questionInput.value.trim()
+  if (!question || isLoading || !sessionId) return
+
+  isLoading = true
+  sendBtn.disabled = true
+  if (!overrideQ) { questionInput.value = ''; questionInput.style.height = 'auto' }
+
+  // Captura a imagem pendente antes de limpar
+  const imageFile   = pendingImageFile
+  const imageB64    = pendingImageBase64
+
+  // Limpa pending
+  pendingImageFile   = null
+  pendingImageBase64 = null
+  inputImgPrev.classList.remove('visible')
+
+  // Bolha do usuário (com preview da imagem se tiver)
+  addMsg('user', question, imageB64)
+
+  const loading = addMsg('loading', '')
+
+  try {
+    // Se tem imagem pendente, faz upload primeiro
+    if (imageFile) {
+      const fd = new FormData()
+      fd.append('image', imageFile)
+      fd.append('sessionId', sessionId)
+      const upRes  = await fetch('/api/image/upload', { method: 'POST', body: fd })
+      const upData = await upRes.json()
+      if (!upRes.ok) throw new Error(upData.error)
+      console.log('[enviar] upload imagem ok, sessionId:', upData.sessionId)
+    }
+
+    const body = { sessionId, question }
+    if (contextPage) body.page = contextPage
+
+    const res  = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+
+    loading.remove()
+    addMsg('assistant', data.answer)
+  } catch (err) {
+    loading.remove()
+    addMsg('system', `Erro: ${err.message}`)
+  } finally {
+    isLoading = false
+    sendBtn.disabled = false
+    questionInput.focus()
+  }
+}
+
+// Converte markdown básico para HTML
+function md(text) {
+  return esc(text)
+    // blocos de código ```...```
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+    // código inline `...`
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    // negrito **...**
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // itálico *...*
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    // títulos ## e ###
+    .replace(/^### (.+)$/gm, '<strong style="font-size:0.95em">$1</strong>')
+    .replace(/^## (.+)$/gm,  '<strong style="font-size:1em">$1</strong>')
+    // listas - item
+    .replace(/^- (.+)$/gm, '• $1')
+    // quebras de linha
+    .replace(/\n/g, '<br>')
+}
+
+function addMsg(role, content, imageB64 = null) {
+  if (role === 'system') {
+    const wrap = document.createElement('div')
+    wrap.className = 'msg-wrap system'
+    wrap.innerHTML = `<div class="msg-inner"><div class="msg-content">${esc(content)}</div></div>`
+    messagesEl.appendChild(wrap)
+    messagesEl.scrollTop = messagesEl.scrollHeight
+    return wrap
+  }
+
+  if (role === 'loading') {
+    const wrap = document.createElement('div')
+    wrap.className = 'msg-wrap assistant'
+    wrap.innerHTML = `
+      <div class="msg-inner">
+        <div class="msg-avatar">🔧</div>
+        <div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div>
+      </div>`
+    messagesEl.appendChild(wrap)
+    messagesEl.scrollTop = messagesEl.scrollHeight
+    return wrap
+  }
+
+  const wrap = document.createElement('div')
+  wrap.className = `msg-wrap ${role}`
+
+  const avatar   = role === 'user' ? '👤' : '🔧'
+  const imgHtml  = imageB64 ? `<img class="msg-image" src="${imageB64}" alt="imagem"/>` : ''
+  const rendered = role === 'assistant' ? md(content) : esc(content).replace(/\n/g, '<br>')
+
+  wrap.innerHTML = `
+    <div class="msg-inner">
+      <div class="msg-avatar">${avatar}</div>
+      <div class="msg-content">${rendered}${imgHtml}</div>
+    </div>`
+
+  messagesEl.appendChild(wrap)
+  messagesEl.scrollTop = messagesEl.scrollHeight
+  return wrap
+}
+
+// ── Menu de contexto (botão direito) ─────────────────────────────────────────
+let selectedText = ''
+
+messagesEl.addEventListener('contextmenu', e => {
+  const sel = window.getSelection()?.toString().trim()
+  if (!sel) return
+  e.preventDefault()
+  selectedText = sel
+  const x = Math.min(e.clientX, window.innerWidth  - 210)
+  const y = Math.min(e.clientY, window.innerHeight - 90)
+  ctxMenu.style.cssText = `display:block;left:${x}px;top:${y}px`
+})
+
+document.addEventListener('click', () => { ctxMenu.style.display = 'none' })
+
+document.getElementById('ctxPesquisar').addEventListener('click', () => {
+  if (!selectedText || !sessionId) return
+  ctxMenu.style.display = 'none'
+  enviar(`Me explique mais sobre: "${selectedText}"`)
+})
+
+document.getElementById('ctxCopiar').addEventListener('click', () => {
+  navigator.clipboard.writeText(selectedText)
+  ctxMenu.style.display = 'none'
+})
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+carregarAparelhos()
+</script>
+</body>
+</html>
