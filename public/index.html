@@ -8,21 +8,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #212121;
-      --sidebar:  #171717;
-      --surface:  #2f2f2f;
-      --border:   #3a3a3a;
-      --text:     #ececec;
-      --muted:    #8e8ea0;
-      --accent:   #10a37f;
-      --user-bg:  #2f2f2f;
-      --bot-bg:   transparent;
-      --input-bg: #2f2f2f;
-      --danger:   #ef4444;
+      --bg:      #212121;
+      --sidebar: #171717;
+      --surface: #2f2f2f;
+      --border:  #3a3a3a;
+      --text:    #ececec;
+      --muted:   #8e8ea0;
+      --accent:  #10a37f;
+      --danger:  #ef4444;
     }
 
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -30,7 +27,7 @@
       overflow: hidden;
     }
 
-    /* ── Sidebar ── */
+    /* ══ SIDEBAR ══════════════════════════════════════════════════════════ */
     .sidebar {
       width: 260px;
       background: var(--sidebar);
@@ -42,16 +39,11 @@
     }
     .sidebar.collapsed { width: 0; opacity: 0; overflow: hidden; border: none; }
 
-    .sidebar-top {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-    }
+    .sidebar-top { padding: 12px; border-bottom: 1px solid var(--border); }
 
     .btn-new {
       width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: flex; align-items: center; gap: 8px;
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
@@ -63,317 +55,127 @@
     }
     .btn-new:hover { background: var(--surface); }
 
-    .sidebar-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px;
-    }
+    .sidebar-list { flex: 1; overflow-y: auto; padding: 8px; }
 
     .list-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 0.7rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
       padding: 8px 8px 4px;
     }
 
     .ap-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: 1px solid transparent;
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      border: 1px solid transparent; margin-bottom: 2px;
       transition: background 0.1s;
-      position: relative;
-      group: true;
     }
     .ap-item:hover { background: var(--surface); }
     .ap-item.active { background: #1a3a2a; border-color: #1e4d38; }
-
-    .ap-item-icon { font-size: 1rem; flex-shrink: 0; }
     .ap-item-info { flex: 1; min-width: 0; }
-    .ap-item-nome { font-size: 0.84rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ap-item-nome { font-size: 0.84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ap-item-sub  { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
-
-    .ap-item-actions {
-      display: none;
-      gap: 2px;
-      flex-shrink: 0;
-    }
+    .ap-item-actions { display: none; gap: 2px; flex-shrink: 0; }
     .ap-item:hover .ap-item-actions,
     .ap-item.active .ap-item-actions { display: flex; }
-
     .ap-item-actions button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      padding: 3px 5px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      line-height: 1;
+      background: none; border: none; color: var(--muted);
+      padding: 3px 5px; border-radius: 4px; cursor: pointer; font-size: 0.78rem;
     }
     .ap-item-actions button:hover { color: var(--text); background: var(--border); }
     .ap-item-actions button.del:hover { color: var(--danger); }
 
-    /* ── Main ── */
+    /* ══ MAIN ═════════════════════════════════════════════════════════════ */
     .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      background: var(--bg);
+      flex: 1; display: flex; flex-direction: column; min-width: 0;
     }
 
-    /* ── Top bar ── */
     .topbar {
-      height: 48px;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--border);
-      gap: 10px;
-      flex-shrink: 0;
+      height: 48px; display: flex; align-items: center;
+      padding: 0 16px; border-bottom: 1px solid var(--border);
+      gap: 10px; flex-shrink: 0;
     }
-
     .topbar-toggle {
-      background: none;
-      border: none;
-      color: var(--muted);
-      padding: 6px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
+      background: none; border: none; color: var(--muted);
+      padding: 6px; border-radius: 6px; cursor: pointer; font-size: 1rem;
     }
     .topbar-toggle:hover { color: var(--text); background: var(--surface); }
-
-    .topbar-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
+    .topbar-title { font-size: 0.9rem; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .topbar-badge {
-      font-size: 0.72rem;
-      color: var(--muted);
-      background: var(--surface);
-      border-radius: 5px;
-      padding: 3px 8px;
-      border: 1px solid var(--border);
+      font-size: 0.72rem; color: var(--muted); background: var(--surface);
+      border-radius: 5px; padding: 3px 8px; border: 1px solid var(--border);
     }
 
-    /* ── Conteúdo em duas colunas ── */
-    .content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* ── Painel imagem ── */
-    .img-panel {
-      width: 380px;
-      min-width: 240px;
-      flex-shrink: 0;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      background: var(--sidebar);
-    }
-
-    .img-panel-toolbar {
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .mode-tabs {
-      display: flex;
-      gap: 4px;
-    }
-    .mode-tab {
-      flex: 1;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 7px;
-      padding: 6px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      text-align: center;
-      transition: all 0.15s;
-    }
-    .mode-tab.active {
-      background: #1a3a2a;
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .drop-zone {
-      border: 1.5px dashed var(--border);
-      border-radius: 8px;
-      padding: 16px 12px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 0.8rem;
-      color: var(--muted);
-      transition: all 0.2s;
-      line-height: 1.7;
-    }
-    .drop-zone:hover { border-color: #555; color: var(--text); }
-    .drop-zone.dragover { border-color: var(--accent); color: var(--accent); background: #1a3a2a22; }
-    .drop-zone b { color: var(--accent); }
-    #fileInput { display: none; }
-
-    .page-nav {
+    /* Barra de anexo (PDF/imagem) */
+    .attach-bar {
       display: none;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--sidebar);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-shrink: 0;
     }
-    .page-nav.visible { display: flex; }
-    .page-nav button {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 6px;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-size: 0.82rem;
+    .attach-bar.visible { display: flex; }
+    .attach-bar .attach-name { color: var(--text); font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attach-bar button {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); border-radius: 6px;
+      padding: 4px 10px; font-size: 0.75rem; cursor: pointer;
     }
-    .page-nav button:hover:not(:disabled) { border-color: #555; }
-    .page-nav button:disabled { opacity: 0.3; cursor: default; }
-    .page-nav span { flex: 1; text-align: center; font-size: 0.8rem; color: var(--muted); }
+    .attach-bar button:hover { border-color: var(--accent); color: var(--accent); }
+    .attach-bar .btn-remove {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 0.9rem; padding: 2px 6px; border-radius: 4px;
+    }
+    .attach-bar .btn-remove:hover { color: var(--danger); }
 
-    .img-preview {
-      flex: 1;
-      overflow: auto;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 12px;
-    }
-    #previewImg {
-      max-width: 100%;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-    .img-placeholder {
-      margin: auto;
-      text-align: center;
-      color: var(--border);
-      font-size: 0.8rem;
-      line-height: 2.2;
-    }
-    .img-placeholder-icon { font-size: 2rem; opacity: 0.3; }
+    /* ══ CHAT ═════════════════════════════════════════════════════════════ */
+    .chat { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
-    /* ── Chat ── */
-    .chat {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
+    .messages { flex: 1; overflow-y: auto; padding: 0; }
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0;
-    }
-
-    .msg-wrap {
-      padding: 20px 0;
-      border-bottom: 1px solid #2a2a2a22;
-    }
-    .msg-wrap.user { background: var(--user-bg); }
-    .msg-wrap.assistant { background: var(--bot-bg); }
+    .msg-wrap { padding: 20px 0; }
+    .msg-wrap.user      { background: var(--surface); }
+    .msg-wrap.assistant { background: transparent; }
+    .msg-wrap.system    { padding: 4px 0; }
 
     .msg-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
+      max-width: 720px; margin: 0 auto;
+      padding: 0 24px; display: flex; gap: 14px; align-items: flex-start;
     }
+    .msg-wrap.system .msg-inner { justify-content: center; }
 
     .msg-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-      margin-top: 2px;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
     }
     .msg-wrap.user .msg-avatar      { background: #5563e2; }
     .msg-wrap.assistant .msg-avatar { background: var(--accent); }
 
     .msg-content {
-      flex: 1;
-      font-size: 0.9rem;
-      line-height: 1.75;
-      color: var(--text);
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .msg-wrap.system {
-      padding: 6px 0;
-      background: transparent;
-      border: none;
-    }
-    .msg-wrap.system .msg-inner {
-      justify-content: center;
+      flex: 1; font-size: 0.9rem; line-height: 1.75;
+      color: var(--text); white-space: pre-wrap; word-break: break-word;
     }
     .msg-wrap.system .msg-content {
-      font-size: 0.72rem;
-      color: var(--border);
-      text-align: center;
-      flex: none;
+      font-size: 0.72rem; color: var(--border); flex: none;
     }
-
-    /* Imagem inline na mensagem */
-    .msg-image {
-      margin-top: 8px;
-      max-width: 260px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      display: block;
-    }
-
     .msg-content code {
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1px 5px;
-      font-family: 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.82em;
+      background: #1a1a1a; border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 5px;
+      font-family: 'Cascadia Code','Consolas',monospace; font-size: 0.82em;
     }
     .msg-content pre {
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
-      margin: 6px 0;
-      overflow-x: auto;
-      font-family: 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.82em;
-      line-height: 1.5;
+      background: #1a1a1a; border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 12px; margin: 6px 0;
+      overflow-x: auto; font-family: 'Cascadia Code','Consolas',monospace;
+      font-size: 0.82em; line-height: 1.5;
     }
     .msg-content pre code { background: none; border: none; padding: 0; }
+    .msg-image { margin-top: 8px; max-width: 220px; border-radius: 6px; border: 1px solid var(--border); display: block; }
 
-    /* Typing dots */
     .typing span {
       display: inline-block; width: 7px; height: 7px;
       border-radius: 50%; background: var(--muted); margin: 0 2px;
@@ -386,229 +188,221 @@
       40%          { transform: translateY(-5px); opacity: 1; }
     }
 
-    /* ── Input area ── */
-    .input-area {
-      padding: 16px 24px 20px;
-      background: var(--bg);
-      flex-shrink: 0;
-    }
-
+    /* ══ INPUT ════════════════════════════════════════════════════════════ */
+    .input-area { padding: 16px 24px 20px; flex-shrink: 0; }
     .input-box {
-      max-width: 720px;
-      margin: 0 auto;
-      background: var(--input-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      overflow: hidden;
-      transition: border-color 0.15s;
+      max-width: 720px; margin: 0 auto;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; transition: border-color 0.15s;
     }
     .input-box:focus-within { border-color: #555; }
 
-    /* Preview de imagem dentro da caixa de input */
     .input-img-preview {
-      display: none;
-      padding: 10px 14px 0;
-      align-items: center;
-      gap: 8px;
+      display: none; padding: 10px 14px 0;
+      align-items: center; gap: 8px;
     }
     .input-img-preview.visible { display: flex; }
-    .input-img-thumb {
-      width: 48px;
-      height: 48px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-    }
-    .input-img-name { font-size: 0.78rem; color: var(--muted); flex: 1; }
-    .input-img-remove {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
+    .input-img-thumb { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); }
+    .input-img-name  { font-size: 0.78rem; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .input-img-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 2px 6px; border-radius: 4px; }
     .input-img-remove:hover { color: var(--danger); }
 
-    .input-row {
-      display: flex;
-      align-items: flex-end;
-      padding: 4px 8px 4px 14px;
-      gap: 4px;
-    }
-
+    .input-row { display: flex; align-items: flex-end; padding: 4px 8px 4px 14px; gap: 4px; }
     textarea {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      padding: 10px 4px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      resize: none;
-      min-height: 44px;
-      max-height: 200px;
-      line-height: 1.6;
-      outline: none;
+      flex: 1; background: transparent; border: none;
+      color: var(--text); padding: 10px 4px;
+      font-family: inherit; font-size: 0.9rem;
+      resize: none; min-height: 44px; max-height: 200px; line-height: 1.6; outline: none;
     }
     textarea::placeholder { color: var(--muted); }
     textarea:disabled { opacity: 0.4; }
 
-    .input-actions {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding-bottom: 4px;
-    }
-
+    .input-actions { display: flex; align-items: center; gap: 4px; padding-bottom: 4px; }
     .btn-icon {
-      background: none;
-      border: none;
-      color: var(--muted);
-      padding: 7px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-      transition: all 0.15s;
+      background: none; border: none; color: var(--muted);
+      padding: 7px; border-radius: 7px; cursor: pointer; font-size: 1rem; line-height: 1;
     }
     .btn-icon:hover { color: var(--text); background: var(--border); }
-
     .btn-send {
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      padding: 7px 9px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      line-height: 1;
-      transition: background 0.15s;
+      background: var(--accent); border: none; color: #fff;
+      border-radius: 8px; padding: 7px 9px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1;
     }
     .btn-send:hover:not(:disabled) { background: #0d8a6a; }
     .btn-send:disabled { opacity: 0.3; cursor: default; }
+    .input-hint { max-width: 720px; margin: 6px auto 0; font-size: 0.68rem; color: var(--border); text-align: center; }
 
-    .input-hint {
-      max-width: 720px;
-      margin: 6px auto 0;
-      font-size: 0.68rem;
-      color: var(--border);
-      text-align: center;
+    /* ══ EMPTY STATE ══════════════════════════════════════════════════════ */
+    .empty-state {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; color: var(--muted);
     }
+    .empty-state-icon { font-size: 2.5rem; opacity: 0.4; }
+    .empty-state h2   { font-size: 1.1rem; color: var(--text); font-weight: 500; }
+    .empty-state p    { font-size: 0.84rem; text-align: center; max-width: 280px; line-height: 1.6; }
 
-    /* ── Menu de contexto ── */
-    #ctxMenu {
-      position: fixed;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 4px;
-      z-index: 9999;
-      min-width: 190px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    /* ══ VIEWER OVERLAY ═══════════════════════════════════════════════════ */
+    #viewerOverlay {
+      position: fixed; inset: 0;
+      background: #0d0d0d;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+    }
+    #viewerOverlay.open { display: flex; }
+
+    .viewer-topbar {
+      height: 44px; display: flex; align-items: center;
+      padding: 0 14px; gap: 10px;
+      background: #111; border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .viewer-topbar span { font-size: 0.84rem; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .viewer-topbar button {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); border-radius: 6px;
+      padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+    }
+    .viewer-topbar button:hover { border-color: #555; }
+    .viewer-topbar .btn-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+    }
+    .viewer-topbar .btn-close:hover { color: var(--danger); }
+
+    /* page nav dentro do viewer */
+    .viewer-pagnav {
+      display: none; align-items: center; gap: 6px;
+    }
+    .viewer-pagnav.visible { display: flex; }
+    .viewer-pagnav button {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); border-radius: 6px;
+      width: 28px; height: 28px; font-size: 1rem; cursor: pointer;
+    }
+    .viewer-pagnav button:hover:not(:disabled) { border-color: #555; }
+    .viewer-pagnav button:disabled { opacity: 0.3; cursor: default; }
+    .viewer-pagnav span { font-size: 0.78rem; color: var(--muted); min-width: 52px; text-align: center; }
+
+    /* Canvas container */
+    #viewerCanvas {
+      flex: 1; position: relative; overflow: hidden;
+      cursor: grab;
+    }
+    #viewerCanvas.selecting { cursor: crosshair; }
+    #viewerCanvas.drawing   { cursor: crosshair; }
+    #viewerCanvas.grabbing  { cursor: grabbing; }
+
+    #mainCanvas, #drawCanvas {
+      position: absolute; top: 0; left: 0;
+      pointer-events: none;
+    }
+    #drawCanvas { pointer-events: none; }
+
+    #selBox {
+      position: absolute;
+      border: 2px solid var(--accent);
+      background: rgba(16,163,127,0.1);
+      pointer-events: none;
       display: none;
     }
-    #ctxMenu button {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--text);
-      padding: 8px 12px;
-      text-align: left;
-      font-size: 0.84rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #ctxMenu button:hover { background: var(--border); }
-    #ctxMenu hr { border: none; border-top: 1px solid var(--border); margin: 3px 0; }
 
-    /* ── Modal ── */
-    .overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(2px);
-    }
-    .overlay.hidden { display: none; }
-
-    .modal {
-      background: #1e1e1e;
+    /* ══ FLOATING TOOL CARD ═══════════════════════════════════════════════ */
+    #toolCard {
+      position: absolute;
+      bottom: 24px; right: 24px;
+      background: #1a1a1aee;
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 28px;
-      width: 400px;
-      max-width: 94vw;
+      padding: 14px 16px;
+      backdrop-filter: blur(8px);
+      width: 220px;
+      cursor: default;
+      user-select: none;
+      z-index: 10;
     }
-    .modal h2 { font-size: 1.05rem; margin-bottom: 20px; color: #fff; }
 
+    .tool-card-title {
+      font-size: 0.7rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .tool-card-drag {
+      cursor: move; color: #444; font-size: 0.9rem;
+    }
+
+    .tool-group {
+      display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 8px;
+      cursor: pointer; transition: all 0.15s; flex: 1; min-width: 36px;
+    }
+    .tool-btn:hover { border-color: #555; background: #333; }
+    .tool-btn.active { background: #1a3a2a; border-color: var(--accent); }
+    .tool-btn .icon  { font-size: 1.1rem; line-height: 1; }
+    .tool-btn .label { font-size: 0.6rem; color: var(--muted); white-space: nowrap; }
+    .tool-btn.active .label { color: var(--accent); }
+
+    .tool-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+
+    .tool-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    }
+    .tool-row label { font-size: 0.72rem; color: var(--muted); flex: 1; }
+    .tool-row input[type=color] {
+      width: 28px; height: 28px; border: 1px solid var(--border);
+      border-radius: 6px; cursor: pointer; padding: 2px; background: none;
+    }
+    .tool-row select {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); border-radius: 6px;
+      padding: 3px 6px; font-size: 0.75rem; cursor: pointer; outline: none;
+    }
+
+    .btn-send-crop {
+      width: 100%; background: var(--accent); border: none;
+      color: #fff; border-radius: 8px; padding: 9px;
+      font-size: 0.84rem; font-weight: 600; cursor: pointer;
+      margin-top: 4px; transition: background 0.15s;
+    }
+    .btn-send-crop:hover { background: #0d8a6a; }
+    .btn-send-crop:disabled { opacity: 0.4; cursor: default; }
+
+    .crop-hint {
+      font-size: 0.68rem; color: var(--border);
+      text-align: center; margin-top: 8px; line-height: 1.5;
+    }
+
+    /* ══ MODAL ════════════════════════════════════════════════════════════ */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+    .overlay.hidden { display: none; }
+    .modal { background: #1e1e1e; border: 1px solid var(--border); border-radius: 14px; padding: 28px; width: 400px; max-width: 94vw; }
+    .modal h2 { font-size: 1.05rem; margin-bottom: 20px; }
     .field { margin-bottom: 14px; }
     .field label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 5px; }
     .field input, .field textarea {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      padding: 9px 12px;
-      font-family: inherit;
-      font-size: 0.875rem;
-      outline: none;
-      transition: border-color 0.15s;
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); padding: 9px 12px;
+      font-family: inherit; font-size: 0.875rem; outline: none;
     }
     .field input:focus, .field textarea:focus { border-color: var(--accent); }
     .field textarea { resize: vertical; min-height: 70px; }
-
-    .modal-footer {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      margin-top: 20px;
-    }
-    .btn-ghost {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 9px 18px;
-      font-size: 0.875rem;
-      cursor: pointer;
-    }
+    .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+    .btn-ghost   { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 18px; font-size: 0.875rem; cursor: pointer; }
     .btn-ghost:hover { background: var(--border); }
-    .btn-primary {
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      padding: 9px 18px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .btn-primary { background: var(--accent); border: none; color: #fff; border-radius: 8px; padding: 9px 18px; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
     .btn-primary:hover { background: #0d8a6a; }
 
-    /* ── Empty state ── */
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--muted);
-    }
-    .empty-state-icon { font-size: 2.5rem; opacity: 0.4; }
-    .empty-state h2 { font-size: 1.1rem; color: var(--text); font-weight: 500; }
-    .empty-state p { font-size: 0.84rem; text-align: center; max-width: 280px; line-height: 1.6; }
+    /* ══ MENU CONTEXTO ════════════════════════════════════════════════════ */
+    #ctxMenu { position: fixed; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 4px; z-index: 9999; min-width: 190px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); display: none; }
+    #ctxMenu button { display: flex; align-items: center; gap: 8px; width: 100%; background: none; border: none; color: var(--text); padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; cursor: pointer; }
+    #ctxMenu button:hover { background: var(--border); }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -617,87 +411,142 @@
 </head>
 <body>
 
-<!-- Sidebar -->
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════════════ -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-top">
-    <button class="btn-new" id="btnNovo">
-      <span>✏️</span> Novo aparelho
-    </button>
+    <button class="btn-new" id="btnNovo">✏️ Novo aparelho</button>
   </div>
   <div class="sidebar-list" id="aparelhosList">
     <div class="list-label">Recentes</div>
   </div>
 </div>
 
-<!-- Main -->
+<!-- ══ MAIN ═════════════════════════════════════════════════════════════════ -->
 <div class="main">
+
   <div class="topbar">
     <button class="topbar-toggle" id="btnToggle">☰</button>
     <div class="topbar-title" id="topTitle">Assistente de Bancada 🔧</div>
     <div class="topbar-badge" id="topBadge" style="display:none"></div>
   </div>
 
-  <div class="content">
+  <!-- Barra de anexo ativa -->
+  <div class="attach-bar" id="attachBar">
+    <span>📎</span>
+    <span class="attach-name" id="attachName">—</span>
+    <button id="btnOpenViewer">🔍 Abrir viewer</button>
+    <button class="btn-remove" id="btnDetach" title="Remover">✕</button>
+  </div>
 
-    <!-- Painel imagem -->
-    <div class="img-panel">
-      <div class="img-panel-toolbar">
-        <div class="mode-tabs">
-          <div class="mode-tab active" id="tabImg" onclick="setMode('image')">🖼️ Imagem</div>
-          <div class="mode-tab" id="tabPdf" onclick="setMode('pdf')">📄 PDF</div>
-        </div>
-        <div class="drop-zone" id="dropZone">
-          🖼️ Arraste, clique<br>ou <b>Ctrl+V</b> para colar
-          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>
-        </div>
-        <div class="page-nav" id="pageNav">
-          <button id="btnPrev" disabled>‹</button>
-          <span id="pageInfo">— / —</span>
-          <button id="btnNext" disabled>›</button>
-          <button id="btnPin" disabled style="font-size:0.72rem;padding:5px 8px;">📌 Usar</button>
-        </div>
-      </div>
-      <div class="img-preview">
-        <div class="img-placeholder" id="imgPH">
-          <div class="img-placeholder-icon">🖼️</div>
-          Nenhuma imagem carregada
-        </div>
-        <img id="previewImg" alt="Preview"/>
-      </div>
+  <div class="chat" id="chatPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-icon">🔧</div>
+      <h2>Assistente de Bancada</h2>
+      <p>Selecione um aparelho na sidebar ou crie um novo para começar.</p>
     </div>
 
-    <!-- Chat -->
-    <div class="chat" id="chatPanel">
-      <!-- Empty state -->
-      <div class="empty-state" id="emptyState">
-        <div class="empty-state-icon">🔧</div>
-        <h2>Assistente de Bancada</h2>
-        <p>Selecione um aparelho na sidebar ou crie um novo para começar a conversa.</p>
-      </div>
+    <div class="messages" id="messages" style="display:none"></div>
 
-      <!-- Mensagens -->
-      <div class="messages" id="messages" style="display:none"></div>
-
-      <!-- Input -->
-      <div class="input-area" id="inputArea" style="display:none">
-        <div class="input-box">
-          <div class="input-img-preview" id="inputImgPreview">
-            <img class="input-img-thumb" id="inputImgThumb" src="" alt=""/>
-            <span class="input-img-name" id="inputImgName"></span>
-            <button class="input-img-remove" id="btnRemoveImg" title="Remover imagem">✕</button>
-          </div>
-          <div class="input-row">
-            <textarea id="questionInput" placeholder="Pergunte sobre o aparelho..." rows="1" disabled></textarea>
-            <div class="input-actions">
-              <button class="btn-icon" id="btnAttach" title="Anexar imagem">📎</button>
-              <button class="btn-send" id="sendBtn" disabled title="Enviar (Enter)">➤</button>
-            </div>
+    <div class="input-area" id="inputArea" style="display:none">
+      <div class="input-box">
+        <div class="input-img-preview" id="inputImgPreview">
+          <img class="input-img-thumb" id="inputImgThumb" src="" alt=""/>
+          <span class="input-img-name" id="inputImgName"></span>
+          <button class="input-img-remove" id="btnRemoveImg">✕</button>
+        </div>
+        <div class="input-row">
+          <textarea id="questionInput" placeholder="Pergunte sobre o aparelho..." rows="1" disabled></textarea>
+          <div class="input-actions">
+            <button class="btn-icon" id="btnAttach" title="Anexar imagem / PDF">📎</button>
+            <button class="btn-send" id="sendBtn" disabled>➤</button>
           </div>
         </div>
-        <div class="input-hint">Enter para enviar · Shift+Enter para nova linha · Ctrl+V para colar imagem</div>
       </div>
+      <div class="input-hint">Enter · Shift+Enter nova linha · Ctrl+V colar imagem</div>
+      <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp,.pdf" style="display:none"/>
     </div>
+  </div>
+</div>
 
+<!-- ══ VIEWER OVERLAY ════════════════════════════════════════════════════════ -->
+<div id="viewerOverlay">
+
+  <div class="viewer-topbar">
+    <span id="viewerTitle">—</span>
+    <div class="viewer-pagnav" id="viewerPageNav">
+      <button id="vBtnPrev" disabled>‹</button>
+      <span id="vPageInfo">— / —</span>
+      <button id="vBtnNext" disabled>›</button>
+    </div>
+    <button class="btn-close" id="btnCloseViewer" title="Fechar viewer">✕</button>
+  </div>
+
+  <div id="viewerCanvas">
+    <canvas id="mainCanvas"></canvas>
+    <canvas id="drawCanvas"></canvas>
+    <div id="selBox"></div>
+
+    <!-- Card flutuante de ferramentas -->
+    <div id="toolCard">
+      <div class="tool-card-title">
+        <span class="tool-card-drag" id="toolCardDrag">⠿</span>
+        Ferramentas
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-btn active" data-tool="select">
+          <span class="icon">⬚</span><span class="label">Selecionar</span>
+        </div>
+        <div class="tool-btn" data-tool="draw">
+          <span class="icon">✏️</span><span class="label">Caneta</span>
+        </div>
+        <div class="tool-btn" data-tool="erase">
+          <span class="icon">🧹</span><span class="label">Borracha</span>
+        </div>
+      </div>
+      <div style="font-size:0.65rem;color:var(--border);margin-bottom:8px;line-height:1.5">
+        🖱️ Botão direito segurado = mover<br>
+        ⬚ Duplo clique na seleção = perguntar<br>
+        Ctrl+Z = desfazer
+      </div>
+
+      <hr class="tool-divider"/>
+
+      <div id="penOptions" style="display:none">
+        <div class="tool-row">
+          <label>Cor</label>
+          <input type="color" id="penColor" value="#ff3333"/>
+        </div>
+        <div class="tool-row">
+          <label>Espessura</label>
+          <select id="penSize">
+            <option value="2">2 px</option>
+            <option value="4" selected>4 px</option>
+            <option value="8">8 px</option>
+            <option value="16">16 px</option>
+          </select>
+        </div>
+        <hr class="tool-divider"/>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-btn" id="btnFit" style="flex:none;padding:6px 10px">
+          <span class="icon">⊡</span><span class="label">Ajustar</span>
+        </div>
+        <div class="tool-btn" id="btnZoomIn" style="flex:none;padding:6px 12px">
+          <span class="icon">+</span><span class="label">Zoom +</span>
+        </div>
+        <div class="tool-btn" id="btnZoomOut" style="flex:none;padding:6px 12px">
+          <span class="icon">−</span><span class="label">Zoom −</span>
+        </div>
+        <div class="tool-btn" id="btnClearDraw" style="flex:none;padding:6px 10px">
+          <span class="icon">🗑</span><span class="label">Limpar</span>
+        </div>
+      </div>
+
+      <button class="btn-send-crop" id="btnSendCrop">➤ Enviar para o chat</button>
+      <div class="crop-hint" id="cropHint">Selecione uma área ou desenhe<br>e clique em Enviar</div>
+    </div>
   </div>
 </div>
 
@@ -731,81 +580,74 @@
 </div>
 
 <script>
-// ── Estado ──────────────────────────────────────────────────────────────────
-let sessionId   = null
-let aparelhoId  = null
-let aparelhoNome = ''
-let pageCount   = 0
-let currentPage = 1
-let contextPage = null
-let isLoading   = false
-let mode        = 'image'
-let pendingImageFile   = null  // arquivo aguardando envio junto com a mensagem
-let pendingImageBase64 = null  // preview base64
+// ══ ESTADO ════════════════════════════════════════════════════════════════════
+let sessionId    = null
+let aparelhoId   = null
+let pageCount    = 0
+let currentPage  = 1
+let isLoading    = false
 
-// ── Elementos ────────────────────────────────────────────────────────────────
-const sidebar       = document.getElementById('sidebar')
-const btnToggle     = document.getElementById('btnToggle')
-const btnNovo       = document.getElementById('btnNovo')
-const topTitle      = document.getElementById('topTitle')
-const topBadge      = document.getElementById('topBadge')
-const dropZone      = document.getElementById('dropZone')
-const pageNav       = document.getElementById('pageNav')
-const btnPrev       = document.getElementById('btnPrev')
-const btnNext       = document.getElementById('btnNext')
-const btnPin        = document.getElementById('btnPin')
-const pageInfo      = document.getElementById('pageInfo')
-const previewImg    = document.getElementById('previewImg')
-const imgPH         = document.getElementById('imgPH')
-const emptyState    = document.getElementById('emptyState')
-const messagesEl    = document.getElementById('messages')
-const inputArea     = document.getElementById('inputArea')
-const questionInput = document.getElementById('questionInput')
-const sendBtn       = document.getElementById('sendBtn')
-const btnAttach     = document.getElementById('btnAttach')
-const inputImgPrev  = document.getElementById('inputImgPreview')
-const inputImgThumb = document.getElementById('inputImgThumb')
-const inputImgName  = document.getElementById('inputImgName')
-const btnRemoveImg  = document.getElementById('btnRemoveImg')
-const ctxMenu       = document.getElementById('ctxMenu')
+// Anexo pendente para envio
+let pendingFile   = null   // File object
+let pendingB64    = null   // base64 para preview na bolha
+let attachedSrc   = null   // URL da imagem/página atual no viewer
 
-// ── Sidebar toggle ───────────────────────────────────────────────────────────
-btnToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'))
+// ── Viewer ──
+const vOverlay  = document.getElementById('viewerOverlay')
+const vCanvas   = document.getElementById('viewerCanvas')
+const mainCvs   = document.getElementById('mainCanvas')
+const drawCvs   = document.getElementById('drawCanvas')
+const mctx      = mainCvs.getContext('2d')
+const dctx      = drawCvs.getContext('2d')
+const selBox    = document.getElementById('selBox')
+const toolCard  = document.getElementById('toolCard')
 
-// ── Aparelhos ────────────────────────────────────────────────────────────────
+let sourceImg  = null
+let zoom       = 1
+let panX       = 0, panY = 0
+let tool       = 'select'
+let isPtr      = false
+let startX     = 0, startY = 0
+let selRect    = null
+let hasDrawing = false
+let undoStack  = []   // array de ImageData — cada entrada = estado após uma pincelada
+
+// ══ SIDEBAR ════════════════════════════════════════════════════════════════
+document.getElementById('btnToggle').addEventListener('click', () =>
+  document.getElementById('sidebar').classList.toggle('collapsed'))
+
+// ══ APARELHOS ══════════════════════════════════════════════════════════════
 async function carregarAparelhos() {
-  const res  = await fetch('/api/aparelhos')
-  const list = await res.json()
-  renderAparelhos(list)
+  const r = await fetch('/api/aparelhos')
+  renderAparelhos(await r.json())
 }
 
 function renderAparelhos(list) {
   const el = document.getElementById('aparelhosList')
   if (!list.length) {
-    el.innerHTML = '<div class="list-label">Recentes</div><div style="padding:16px 8px;font-size:0.78rem;color:var(--border)">Nenhum aparelho ainda</div>'
+    el.innerHTML = '<div class="list-label">Recentes</div><div style="padding:16px 8px;font-size:0.78rem;color:var(--border)">Nenhum aparelho</div>'
     return
   }
   el.innerHTML = '<div class="list-label">Recentes</div>' + list.map(ap => `
     <div class="ap-item ${ap.id == aparelhoId ? 'active' : ''}" onclick="abrirAparelho(${ap.id})">
-      <div class="ap-item-icon">📱</div>
+      <div style="font-size:1rem">📱</div>
       <div class="ap-item-info">
         <div class="ap-item-nome" title="${esc(ap.nome)}">${esc(ap.nome)}</div>
-        <div class="ap-item-sub">${ap.modelo ? esc(ap.modelo) + ' · ' : ''}${ap.total_msgs || 0} msgs</div>
+        <div class="ap-item-sub">${ap.modelo ? esc(ap.modelo)+' · ' : ''}${ap.total_msgs||0} msgs</div>
       </div>
       <div class="ap-item-actions">
-        <button onclick="event.stopPropagation();limparChat(${ap.id})" title="Limpar chat">🗑</button>
-        <button class="del" onclick="event.stopPropagation();deletarAparelho(${ap.id})" title="Remover">✕</button>
+        <button onclick="event.stopPropagation();limparChat(${ap.id})">🗑</button>
+        <button class="del" onclick="event.stopPropagation();deletarAparelho(${ap.id})">✕</button>
       </div>
-    </div>
-  `).join('')
+    </div>`).join('')
 }
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────────────
-btnNovo.addEventListener('click', () => {
+// ══ MODAL ══════════════════════════════════════════════════════════════════
+document.getElementById('btnNovo').addEventListener('click', () => {
   document.getElementById('overlay').classList.remove('hidden')
   document.getElementById('inpNome').focus()
 })
@@ -814,13 +656,11 @@ document.getElementById('overlay').addEventListener('click', e => {
   if (e.target === document.getElementById('overlay')) fecharModal()
 })
 document.getElementById('btnConfirmar').addEventListener('click', criarAparelho)
-document.getElementById('inpNome').addEventListener('keydown', e => { if (e.key === 'Enter') criarAparelho() })
+document.getElementById('inpNome').addEventListener('keydown', e => { if (e.key==='Enter') criarAparelho() })
 
 function fecharModal() {
   document.getElementById('overlay').classList.add('hidden')
-  document.getElementById('inpNome').value = ''
-  document.getElementById('inpModelo').value = ''
-  document.getElementById('inpNotas').value = ''
+  ;['inpNome','inpModelo','inpNotas'].forEach(id => document.getElementById(id).value = '')
 }
 
 async function criarAparelho() {
@@ -828,79 +668,55 @@ async function criarAparelho() {
   const modelo = document.getElementById('inpModelo').value.trim()
   const notas  = document.getElementById('inpNotas').value.trim()
   if (!nome) { document.getElementById('inpNome').focus(); return }
-
-  const res  = await fetch('/api/aparelhos', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome, modelo, notas })
-  })
-  const data = await res.json()
+  const r    = await fetch('/api/aparelhos', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({nome,modelo,notas}) })
+  const data = await r.json()
   fecharModal()
   iniciarSessao(data.aparelho, data.sessionId, [])
   carregarAparelhos()
 }
 
 async function abrirAparelho(id) {
-  const res  = await fetch(`/api/aparelhos/${id}/abrir`, { method: 'POST' })
-  const data = await res.json()
+  const r    = await fetch(`/api/aparelhos/${id}/abrir`, { method:'POST' })
+  const data = await r.json()
   iniciarSessao(data.aparelho, data.sessionId, data.history)
   carregarAparelhos()
 }
 
 async function limparChat(id) {
-  if (!confirm('Limpar todo o histórico desse aparelho?')) return
-  await fetch(`/api/aparelhos/${id}/conversa`, { method: 'DELETE' })
-  if (id == aparelhoId) {
-    messagesEl.innerHTML = ''
-    addMsg('system', 'Histórico limpo.')
-  }
+  if (!confirm('Limpar histórico?')) return
+  await fetch(`/api/aparelhos/${id}/conversa`, { method:'DELETE' })
+  if (id == aparelhoId) { messagesEl.innerHTML=''; addMsg('system','Histórico limpo.') }
   carregarAparelhos()
 }
 
 async function deletarAparelho(id) {
-  if (!confirm('Remover esse aparelho?')) return
-  await fetch(`/api/aparelhos/${id}`, { method: 'DELETE' })
-  if (id == aparelhoId) {
-    sessionId   = null
-    aparelhoId  = null
-    showEmpty()
-  }
+  if (!confirm('Remover aparelho?')) return
+  await fetch(`/api/aparelhos/${id}`, { method:'DELETE' })
+  if (id == aparelhoId) { aparelhoId=null; sessionId=null; showEmpty() }
   carregarAparelhos()
 }
 
-function iniciarSessao(aparelho, sid, history) {
-  sessionId    = sid
-  aparelhoId   = aparelho.id
-  aparelhoNome = aparelho.nome
-
-  topTitle.textContent = '🔧 ' + aparelho.nome
-  topBadge.textContent = aparelho.modelo || ''
-  topBadge.style.display = aparelho.modelo ? 'block' : 'none'
-
-  // Mostra chat
-  emptyState.style.display = 'none'
-  messagesEl.style.display = 'flex'
+function iniciarSessao(ap, sid, history) {
+  sessionId  = sid
+  aparelhoId = ap.id
+  document.getElementById('topTitle').textContent = '🔧 ' + ap.nome
+  const badge = document.getElementById('topBadge')
+  badge.textContent    = ap.modelo || ''
+  badge.style.display  = ap.modelo ? 'block' : 'none'
+  emptyState.style.display  = 'none'
+  messagesEl.style.display  = 'flex'
   messagesEl.style.flexDirection = 'column'
-  inputArea.style.display  = 'block'
-  questionInput.disabled   = false
-  sendBtn.disabled         = false
-
-  messagesEl.innerHTML = ''
-
-  if (history && history.length) {
-    history.forEach(m => {
-      if (m.role === 'user' || m.role === 'assistant') {
-        addMsg(m.role, m.content)
-      }
-    })
-    addMsg('system', '── histórico anterior ──')
+  inputArea.style.display   = 'block'
+  questionInput.disabled    = false
+  sendBtn.disabled          = false
+  messagesEl.innerHTML      = ''
+  if (history?.length) {
+    history.filter(m=>m.role!=='system').forEach(m => addMsg(m.role, m.content))
+    addMsg('system','── histórico anterior ──')
   } else {
-    const saudacao = aparelho.notas
-      ? `Olá! Aparelho: **${aparelho.nome}**${aparelho.modelo ? ' (' + aparelho.modelo + ')' : ''}.\nObservações: ${aparelho.notas}\n\nComo posso ajudar?`
-      : `Olá! Aparelho: **${aparelho.nome}**${aparelho.modelo ? ' (' + aparelho.modelo + ')' : ''}. Como posso ajudar?`
-    addMsg('assistant', saudacao)
+    const obs = ap.notas ? `\nObservações: ${ap.notas}` : ''
+    addMsg('assistant', `Olá! Aparelho: **${ap.nome}**${ap.modelo?' ('+ap.modelo+')':''}${obs}\n\nComo posso ajudar?`)
   }
-
   questionInput.focus()
 }
 
@@ -908,154 +724,622 @@ function showEmpty() {
   emptyState.style.display = 'flex'
   messagesEl.style.display = 'none'
   inputArea.style.display  = 'none'
-  topTitle.textContent     = 'Assistente de Bancada 🔧'
-  topBadge.style.display   = 'none'
+  document.getElementById('topTitle').textContent = 'Assistente de Bancada 🔧'
+  document.getElementById('topBadge').style.display = 'none'
 }
 
-// ── Modo imagem/PDF ───────────────────────────────────────────────────────────
-function setMode(m) {
-  mode = m
-  document.getElementById('tabImg').classList.toggle('active', m === 'image')
-  document.getElementById('tabPdf').classList.toggle('active', m === 'pdf')
-  pageNav.classList.toggle('visible', m === 'pdf')
+// ══ ATTACH BAR ═════════════════════════════════════════════════════════════
+const attachBar    = document.getElementById('attachBar')
+const attachName   = document.getElementById('attachName')
 
-  if (m === 'image') {
-    dropZone.innerHTML = '🖼️ Arraste, clique<br>ou <b>Ctrl+V</b> para colar<input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>'
-    imgPH.innerHTML = '<div class="img-placeholder-icon">🖼️</div>Nenhuma imagem carregada'
-  } else {
-    dropZone.innerHTML = '📄 Arraste o PDF aqui<br>ou clique para selecionar<input type="file" id="fileInput" accept=".pdf"/>'
-    imgPH.innerHTML = '<div class="img-placeholder-icon">📄</div>Nenhum PDF carregado'
-  }
-
-  previewImg.style.display = 'none'
-  imgPH.style.display = 'block'
-  rebindFileInput()
+function mostrarAttachBar(nome) {
+  attachName.textContent  = nome
+  attachBar.classList.add('visible')
+}
+function esconderAttachBar() {
+  attachBar.classList.remove('visible')
+  attachedSrc = null
 }
 
-function rebindFileInput() {
-  const fi = document.getElementById('fileInput')
-  if (fi) fi.addEventListener('change', onFileChange)
-}
-
-// ── Drop zone ─────────────────────────────────────────────────────────────────
-dropZone.addEventListener('click', () => document.getElementById('fileInput')?.click())
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover') })
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'))
-dropZone.addEventListener('drop', e => {
-  e.preventDefault()
-  dropZone.classList.remove('dragover')
-  const file = e.dataTransfer.files[0]
-  if (!file) return
-  mode === 'image' ? receberImagem(file) : uploadPdf(file)
+document.getElementById('btnDetach').addEventListener('click', () => {
+  pendingFile = null; pendingB64 = null
+  inputImgPrev.classList.remove('visible')
+  esconderAttachBar()
 })
-document.getElementById('fileInput').addEventListener('change', onFileChange)
 
-function onFileChange() {
-  const f = document.getElementById('fileInput')?.files[0]
-  if (f) mode === 'image' ? receberImagem(f) : uploadPdf(f)
-}
+document.getElementById('btnOpenViewer').addEventListener('click', () => {
+  if (attachedSrc) abrirViewer(attachedSrc, attachName.textContent)
+})
 
-// Botão de anexar (abre seletor de arquivo)
-btnAttach.addEventListener('click', () => document.getElementById('fileInput')?.click())
+// ══ UPLOAD / ANEXO ═════════════════════════════════════════════════════════
+const fileInput     = document.getElementById('fileInput')
+const inputImgPrev  = document.getElementById('inputImgPreview')
+const inputImgThumb = document.getElementById('inputImgThumb')
+const inputImgName  = document.getElementById('inputImgName')
+const inputArea     = document.getElementById('inputArea')
+const messagesEl    = document.getElementById('messages')
+const emptyState    = document.getElementById('emptyState')
+const questionInput = document.getElementById('questionInput')
+const sendBtn       = document.getElementById('sendBtn')
 
-// Ctrl+V — colar imagem
+document.getElementById('btnAttach').addEventListener('click', () => fileInput.click())
+document.getElementById('btnRemoveImg').addEventListener('click', () => {
+  pendingFile = null; pendingB64 = null
+  inputImgPrev.classList.remove('visible')
+})
+
+fileInput.addEventListener('change', () => {
+  const f = fileInput.files[0]
+  if (!f) return
+  if (f.type === 'application/pdf') receberPdf(f)
+  else receberImagem(f)
+  fileInput.value = ''
+})
+
+// Ctrl+V
 document.addEventListener('paste', e => {
-  if (mode !== 'image') return
   const items = e.clipboardData?.items
   if (!items) return
   for (const item of items) {
     if (item.type.startsWith('image/')) {
-      const file  = item.getAsFile()
-      const named = new File([file], `colado-${Date.now()}.png`, { type: file.type })
-      receberImagem(named)
+      const f = item.getAsFile()
+      receberImagem(new File([f], `colado-${Date.now()}.png`, { type: f.type }))
       break
     }
   }
 })
 
-// ── Receber imagem ─────────────────────────────────────────────────────────────
-// A imagem fica "pendente" e é enviada junto com a próxima mensagem
-function receberImagem(file) {
-  pendingImageFile = file
+// Drag & drop global
+document.addEventListener('dragover', e => e.preventDefault())
+document.addEventListener('drop', e => {
+  e.preventDefault()
+  const f = e.dataTransfer.files[0]
+  if (!f) return
+  if (f.type === 'application/pdf') receberPdf(f)
+  else if (f.type.startsWith('image/')) receberImagem(f)
+})
 
-  // Preview no painel esquerdo
+async function receberImagem(file) {
   const url = URL.createObjectURL(file)
-  previewImg.src = url
-  previewImg.style.display = 'block'
-  imgPH.style.display = 'none'
-  dropZone.innerHTML = `🖼️ ${file.name}<input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp"/>`
-  rebindFileInput()
+  pendingFile = file
 
   // Preview no input
-  inputImgThumb.src = url
-  inputImgName.textContent = file.name
+  inputImgThumb.src         = url
+  inputImgName.textContent  = file.name
   inputImgPrev.classList.add('visible')
 
-  // Guarda base64 para mostrar na bolha de mensagem
+  // Attach bar
+  attachedSrc = url
+  mostrarAttachBar(file.name)
+
+  // Base64 para bolha
   const reader = new FileReader()
-  reader.onload = e => { pendingImageBase64 = e.target.result }
+  reader.onload = e => { pendingB64 = e.target.result }
   reader.readAsDataURL(file)
 }
 
-btnRemoveImg.addEventListener('click', () => {
-  pendingImageFile   = null
-  pendingImageBase64 = null
-  inputImgPrev.classList.remove('visible')
-  inputImgThumb.src = ''
-})
+async function receberPdf(file) {
+  if (!sessionId) { addMsg('system','Crie ou selecione um aparelho primeiro.'); return }
 
-async function uploadPdf(file) {
-  dropZone.textContent = '⏳ Carregando...'
-  const formData = new FormData()
-  formData.append('pdf', file)
-  if (sessionId) formData.append('sessionId', sessionId)
+  const fd = new FormData()
+  fd.append('pdf', file)
+  fd.append('sessionId', sessionId)
+  mostrarAttachBar('⏳ Carregando PDF...')
 
   try {
-    const res  = await fetch('/api/pdf/upload', { method: 'POST', body: formData })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error)
-    if (!sessionId) sessionId = data.sessionId
+    const r    = await fetch('/api/pdf/upload', { method:'POST', body:fd })
+    const data = await r.json()
+    if (!r.ok) throw new Error(data.error)
     pageCount   = data.pageCount
     currentPage = 1
-    btnPrev.disabled = false
-    btnNext.disabled = false
-    btnPin.disabled  = false
-    dropZone.innerHTML = `📄 ${file.name}<input type="file" id="fileInput" accept=".pdf"/>`
-    rebindFileInput()
-    addMsg('system', `PDF carregado: ${file.name} (${pageCount} páginas)`)
-    loadPage(1)
+    mostrarAttachBar(`${file.name} (${pageCount} pág.)`)
+
+    // Carrega pág 1 no viewer
+    const url = `/api/pdf/${sessionId}/page/1/image?t=${Date.now()}`
+    attachedSrc = url
+    addMsg('system', `PDF carregado: ${file.name} — ${pageCount} páginas. Clique em "Abrir viewer" para navegar.`)
   } catch (err) {
-    dropZone.innerHTML = '📄 Arraste o PDF aqui<br>ou clique para selecionar<input type="file" id="fileInput" accept=".pdf"/>'
-    rebindFileInput()
-    addMsg('system', `Erro: ${err.message}`)
+    esconderAttachBar()
+    addMsg('system', `Erro ao carregar PDF: ${err.message}`)
   }
 }
 
-// ── Navegação PDF ─────────────────────────────────────────────────────────────
-btnPrev.addEventListener('click', () => loadPage(currentPage - 1))
-btnNext.addEventListener('click', () => loadPage(currentPage + 1))
-btnPin.addEventListener('click', () => {
-  contextPage = currentPage
-  addMsg('system', `Página ${contextPage} fixada no contexto.`)
-})
+// ══ VIEWER ═════════════════════════════════════════════════════════════════
 
-async function loadPage(page) {
-  if (!sessionId || page < 1 || page > pageCount) return
-  currentPage = page
-  pageInfo.textContent = `${page} / ${pageCount}`
-  btnPrev.disabled = page <= 1
-  btnNext.disabled = page >= pageCount
-
-  previewImg.style.display = 'none'
-  imgPH.style.display = 'block'
-  imgPH.innerHTML = '<div class="img-placeholder-icon">⏳</div>Carregando...'
-
-  previewImg.src = `/api/pdf/${sessionId}/page/${page}/image?t=${Date.now()}`
-  previewImg.onload  = () => { previewImg.style.display = 'block'; imgPH.style.display = 'none' }
-  previewImg.onerror = () => { imgPH.innerHTML = '<div>❌ Erro ao carregar</div>' }
+function abrirViewer(src, titulo) {
+  document.getElementById('viewerTitle').textContent = titulo || '—'
+  const isPdf = titulo && titulo.includes('pág.')
+  document.getElementById('viewerPageNav').classList.toggle('visible', isPdf)
+  if (isPdf) {
+    document.getElementById('vBtnPrev').disabled = currentPage <= 1
+    document.getElementById('vBtnNext').disabled = currentPage >= pageCount
+    document.getElementById('vPageInfo').textContent = `${currentPage} / ${pageCount}`
+  }
+  vOverlay.classList.add('open')
+  carregarImagemViewer(src)
 }
 
-// ── Chat ──────────────────────────────────────────────────────────────────────
+document.getElementById('btnCloseViewer').addEventListener('click', () => {
+  vOverlay.classList.remove('open')
+})
+
+document.getElementById('vBtnPrev').addEventListener('click', async () => {
+  if (currentPage <= 1) return
+  currentPage--
+  await mudarPaginaViewer(currentPage)
+})
+document.getElementById('vBtnNext').addEventListener('click', async () => {
+  if (currentPage >= pageCount) return
+  currentPage++
+  await mudarPaginaViewer(currentPage)
+})
+
+async function mudarPaginaViewer(page) {
+  document.getElementById('vBtnPrev').disabled = page <= 1
+  document.getElementById('vBtnNext').disabled = page >= pageCount
+  document.getElementById('vPageInfo').textContent = `${page} / ${pageCount}`
+  const url = `/api/pdf/${sessionId}/page/${page}/image?t=${Date.now()}`
+  attachedSrc = url
+  carregarImagemViewer(url)
+}
+
+function carregarImagemViewer(src) {
+  const img = new Image()
+  img.onload = () => {
+    sourceImg = img
+    clearDraw()
+    fitViewer()
+  }
+  img.onerror = () => addMsg('system','Erro ao carregar imagem no viewer.')
+  img.src = src
+}
+
+function resizeCanvases() {
+  const w = vCanvas.clientWidth
+  const h = vCanvas.clientHeight
+  if (mainCvs.width !== w || mainCvs.height !== h) {
+    mainCvs.width  = drawCvs.width  = w
+    mainCvs.height = drawCvs.height = h
+  }
+}
+
+function renderViewer() {
+  if (!sourceImg) return
+  resizeCanvases()
+  const w = mainCvs.width, h = mainCvs.height
+  mctx.clearRect(0, 0, w, h)
+  mctx.save()
+  mctx.translate(panX, panY)
+  mctx.scale(zoom, zoom)
+  mctx.drawImage(sourceImg, 0, 0)
+  mctx.restore()
+  // Reposiciona o selBox de acordo com pan/zoom atual
+  atualizarSelBox()
+}
+
+// Converte selRect (coords imagem) → posição na tela do viewer
+function atualizarSelBox() {
+  if (!selRect) return
+  const sx = selRect.x * zoom + panX
+  const sy = selRect.y * zoom + panY
+  const sw = selRect.w * zoom
+  const sh = selRect.h * zoom
+  selBox.style.left   = sx + 'px'
+  selBox.style.top    = sy + 'px'
+  selBox.style.width  = sw + 'px'
+  selBox.style.height = sh + 'px'
+  selBox.style.display = 'block'
+}
+
+function fitViewer() {
+  if (!sourceImg) return
+  resizeCanvases()
+  const w = mainCvs.width, h = mainCvs.height
+  const sx = w / sourceImg.naturalWidth
+  const sy = h / sourceImg.naturalHeight
+  zoom = Math.min(sx, sy) * 0.96
+  panX = (w - sourceImg.naturalWidth  * zoom) / 2
+  panY = (h - sourceImg.naturalHeight * zoom) / 2
+  renderViewer()
+}
+
+function clearDraw() {
+  dctx.clearRect(0, 0, drawCvs.width, drawCvs.height)
+  hasDrawing = false
+  undoStack  = []
+  selRect    = null
+  selBox.style.display = 'none'
+}
+
+function salvarUndo() {
+  // Salva o estado atual do canvas de desenho no stack (máx 30)
+  undoStack.push(dctx.getImageData(0, 0, drawCvs.width, drawCvs.height))
+  if (undoStack.length > 30) undoStack.shift()
+}
+
+function desfazer() {
+  if (!undoStack.length) return
+  undoStack.pop()  // descarta o estado atual
+  if (undoStack.length) {
+    // Restaura o último estado salvo
+    dctx.putImageData(undoStack[undoStack.length - 1], 0, 0)
+  } else {
+    // Stack vazio = volta para canvas limpo
+    dctx.clearRect(0, 0, drawCvs.width, drawCvs.height)
+    hasDrawing = false
+  }
+}
+
+function setZoom(factor, cx, cy) {
+  cx = cx ?? mainCvs.width  / 2
+  cy = cy ?? mainCvs.height / 2
+  const ix  = (cx - panX) / zoom
+  const iy  = (cy - panY) / zoom
+  zoom = Math.min(Math.max(zoom * factor, 0.05), 20)
+  panX = cx - ix * zoom
+  panY = cy - iy * zoom
+  renderViewer()
+}
+
+document.getElementById('btnFit')    .addEventListener('click', fitViewer)
+document.getElementById('btnZoomIn') .addEventListener('click', () => setZoom(1.25))
+document.getElementById('btnZoomOut').addEventListener('click', () => setZoom(0.8))
+document.getElementById('btnClearDraw').addEventListener('click', () => { clearDraw(); renderViewer() })
+
+// Zoom com scroll
+vCanvas.addEventListener('wheel', e => {
+  if (!sourceImg) return
+  e.preventDefault()
+  const r  = vCanvas.getBoundingClientRect()
+  const cx = e.clientX - r.left
+  const cy = e.clientY - r.top
+  setZoom(e.deltaY < 0 ? 1.1 : 0.91, cx, cy)
+}, { passive: false })
+
+// Ferramentas
+document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    tool = btn.dataset.tool
+    document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    atualizarCursor()
+  })
+})
+
+// Atualiza cursor do viewer de acordo com ferramenta e tamanho
+function atualizarCursor() {
+  // Mostra opções de caneta só quando draw ou erase está ativo
+  document.getElementById('penOptions').style.display =
+    (tool === 'draw' || tool === 'erase') ? 'block' : 'none'
+
+  vCanvas.style.cursor = ''
+  vCanvas.className    = ''
+
+  if (tool === 'select') {
+    vCanvas.classList.add('selecting')  // crosshair via CSS
+  } else if (tool === 'draw') {
+    // Ponto de mira pequeno para caneta
+    const size = parseInt(document.getElementById('penSize').value)
+    const r    = Math.max(size / 2, 2)
+    const dim  = r * 2 + 4
+    const svg  = `<svg xmlns='http://www.w3.org/2000/svg' width='${dim}' height='${dim}'>
+      <circle cx='${dim/2}' cy='${dim/2}' r='${r}' fill='${document.getElementById('penColor').value}' opacity='0.8'/>
+    </svg>`
+    const url  = `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${dim/2} ${dim/2}, crosshair`
+    vCanvas.style.cursor = url
+  } else if (tool === 'erase') {
+    // Quadrado vazio representando a borracha
+    const size = parseInt(document.getElementById('penSize').value) * 4
+    const dim  = size + 2
+    const svg  = `<svg xmlns='http://www.w3.org/2000/svg' width='${dim}' height='${dim}'>
+      <rect x='1' y='1' width='${size}' height='${size}' fill='none' stroke='white' stroke-width='1.5'/>
+      <rect x='1' y='1' width='${size}' height='${size}' fill='none' stroke='black' stroke-width='0.5' stroke-dasharray='2,2'/>
+    </svg>`
+    const url  = `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${dim/2} ${dim/2}, cell`
+    vCanvas.style.cursor = url
+  } else {
+    vCanvas.style.cursor = 'grab'  // pan
+  }
+}
+
+// Atualiza cursor quando muda cor ou espessura
+document.getElementById('penColor').addEventListener('input', () => { if (tool==='draw') atualizarCursor() })
+document.getElementById('penSize') .addEventListener('change', () => { if (tool==='draw'||tool==='erase') atualizarCursor() })
+
+// ── Pointer events do viewer ──────────────────────────────────────────────────
+// Botão ESQUERDO  → ferramenta ativa (seleção, caneta, borracha)
+// Botão DIREITO   → pan (mover imagem) em qualquer modo
+// Duplo clique    → se tiver seleção feita, abre dialog de pergunta
+
+let isPanRight = false  // pan com botão direito
+let isPtrLeft  = false  // ferramenta com botão esquerdo
+
+// Impede menu de contexto nativo dentro do viewer
+vCanvas.addEventListener('contextmenu', e => e.preventDefault())
+
+vCanvas.addEventListener('mousedown', e => {
+  if (!sourceImg) return
+  if (e.target.closest('#toolCard')) return
+
+  const r = vCanvas.getBoundingClientRect()
+  startX  = e.clientX - r.left
+  startY  = e.clientY - r.top
+
+  // Botão direito → pan
+  if (e.button === 2) {
+    isPanRight = true
+    vCanvas.style.cursor = 'grabbing'
+    return
+  }
+
+  // Botão esquerdo → ferramenta
+  if (e.button === 0) {
+    isPtrLeft = true
+    if (tool === 'draw' || tool === 'erase') {
+      dctx.beginPath(); dctx.moveTo(startX, startY)
+    }
+    if (tool === 'select') {
+      selBox.style.cssText = `display:block;left:${startX}px;top:${startY}px;width:0;height:0`
+    }
+  }
+})
+
+vCanvas.addEventListener('mousemove', e => {
+  if (!sourceImg) return
+  if (e.target.closest('#toolCard')) return
+
+  const r  = vCanvas.getBoundingClientRect()
+  const cx = e.clientX - r.left
+  const cy = e.clientY - r.top
+  const dx = cx - startX
+  const dy = cy - startY
+
+  // Pan com botão direito
+  if (isPanRight) {
+    panX += dx; panY += dy
+    startX = cx; startY = cy
+    renderViewer()
+    return
+  }
+
+  if (!isPtrLeft) return
+
+  if (tool === 'select') {
+    const bx = dx >= 0 ? startX : cx
+    const by = dy >= 0 ? startY : cy
+    selBox.style.left   = bx + 'px'
+    selBox.style.top    = by + 'px'
+    selBox.style.width  = Math.abs(dx) + 'px'
+    selBox.style.height = Math.abs(dy) + 'px'
+  }
+
+  if (tool === 'draw' || tool === 'erase') {
+    const color = document.getElementById('penColor').value
+    const size  = parseInt(document.getElementById('penSize').value)
+    dctx.lineTo(cx, cy)
+    dctx.strokeStyle = tool === 'erase' ? 'rgba(0,0,0,1)' : color
+    dctx.lineWidth   = tool === 'erase' ? size * 4 : size
+    dctx.lineCap     = dctx.lineJoin = 'round'
+    dctx.globalCompositeOperation = tool === 'erase' ? 'destination-out' : 'source-over'
+    dctx.stroke()
+    dctx.beginPath(); dctx.moveTo(cx, cy)
+    hasDrawing = true
+  }
+})
+
+vCanvas.addEventListener('mouseup', e => {
+  // Solta pan direito
+  if (e.button === 2) {
+    isPanRight = false
+    atualizarCursor()
+    return
+  }
+
+  // Solta ferramenta esquerda
+  if (e.button === 0 && isPtrLeft) {
+    isPtrLeft = false
+    atualizarCursor()
+
+    if (tool === 'draw' || tool === 'erase') {
+      dctx.beginPath()
+      if (hasDrawing) salvarUndo()
+    }
+
+    if (tool === 'select') {
+      const r  = vCanvas.getBoundingClientRect()
+      const cx = e.clientX - r.left
+      const cy = e.clientY - r.top
+      const x1 = Math.min(startX, cx), y1 = Math.min(startY, cy)
+      const x2 = Math.max(startX, cx), y2 = Math.max(startY, cy)
+      if (x2-x1 < 8 || y2-y1 < 8) { selBox.style.display='none'; return }
+      selRect = {
+        x: Math.round((x1 - panX) / zoom),
+        y: Math.round((y1 - panY) / zoom),
+        w: Math.round((x2 - x1) / zoom),
+        h: Math.round((y2 - y1) / zoom)
+      }
+      document.getElementById('cropHint').textContent = `Área: ${selRect.w}×${selRect.h}px — duplo clique para perguntar`
+    }
+  }
+})
+
+vCanvas.addEventListener('mouseleave', () => {
+  if (isPtrLeft && (tool==='draw'||tool==='erase')) dctx.beginPath()
+  if (isPanRight) atualizarCursor()
+  isPtrLeft  = false
+  isPanRight = false
+})
+
+// Duplo clique → abre dialog de pergunta sobre a seleção
+vCanvas.addEventListener('dblclick', e => {
+  if (e.target.closest('#toolCard')) return
+  if (tool !== 'select' || !selRect) return
+  abrirDialogPergunta()
+})
+
+// Dialog de pergunta rápida
+function abrirDialogPergunta() {
+  // Remove dialog anterior se existir
+  document.getElementById('quickDialog')?.remove()
+
+  const r   = vCanvas.getBoundingClientRect()
+  const sbr = selBox.getBoundingClientRect()
+  // Posiciona abaixo da seleção, dentro do viewer
+  const top = Math.min(sbr.bottom - r.top + 10, r.height - 120)
+  const left = Math.max(sbr.left - r.left, 10)
+
+  const dlg = document.createElement('div')
+  dlg.id    = 'quickDialog'
+  dlg.style.cssText = `
+    position:absolute; z-index:20;
+    left:${left}px; top:${top}px;
+    background:#1a1a1aee; border:1px solid var(--border);
+    border-radius:10px; padding:10px;
+    backdrop-filter:blur(8px);
+    display:flex; gap:6px; align-items:center;
+    min-width:280px; max-width:420px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.6);
+  `
+
+  const input = document.createElement('input')
+  input.type        = 'text'
+  input.placeholder = 'O que você quer saber sobre essa área?'
+  input.style.cssText = `
+    flex:1; background:#111; border:1px solid var(--border);
+    border-radius:7px; color:#ececec;
+    padding:8px 10px; font-size:0.84rem; outline:none;
+    font-family:inherit;
+  `
+  input.addEventListener('focus', () => input.style.borderColor = 'var(--accent)')
+  input.addEventListener('blur',  () => input.style.borderColor = 'var(--border)')
+
+  const btn = document.createElement('button')
+  btn.textContent = '➤'
+  btn.style.cssText = `
+    background:var(--accent); border:none; color:#fff;
+    border-radius:7px; padding:8px 12px;
+    font-size:0.9rem; cursor:pointer; flex-shrink:0;
+  `
+
+  const fechar = () => dlg.remove()
+
+  const enviarComSel = () => {
+    const q = input.value.trim()
+    if (!q) { input.focus(); return }
+    fechar()
+    capturarEEnviar(q)
+  }
+
+  btn.addEventListener('click', enviarComSel)
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') enviarComSel()
+    if (e.key === 'Escape') fechar()
+  })
+
+  dlg.appendChild(input)
+  dlg.appendChild(btn)
+  vCanvas.appendChild(dlg)
+  setTimeout(() => input.focus(), 50)
+}
+
+// Captura a seleção e envia ao chat com a pergunta
+function capturarEEnviar(pergunta) {
+  if (!sourceImg || !selRect) return
+  const off  = document.createElement('canvas')
+  const octx = off.getContext('2d')
+  const clX  = Math.max(0, selRect.x)
+  const clY  = Math.max(0, selRect.y)
+  const clW  = Math.min(selRect.w, sourceImg.naturalWidth  - clX)
+  const clH  = Math.min(selRect.h, sourceImg.naturalHeight - clY)
+  off.width  = clW; off.height = clH
+  octx.drawImage(sourceImg, clX, clY, clW, clH, 0, 0, clW, clH)
+
+  selBox.style.display = 'none'
+  selRect = null
+  document.getElementById('cropHint').textContent = 'Selecione uma área ou desenhe\ne clique em Enviar'
+
+  off.toBlob(blob => {
+    const file = new File([blob], `sel-${Date.now()}.png`, { type:'image/png' })
+    receberImagem(file)
+    vOverlay.classList.remove('open')
+    // Coloca pergunta no input e envia
+    questionInput.value = pergunta
+    questionInput.dispatchEvent(new Event('input'))
+    setTimeout(() => enviar(), 100)
+  }, 'image/png')
+}
+
+// Enviar seleção / anotação
+document.getElementById('btnSendCrop').addEventListener('click', () => {
+  if (!sourceImg) return
+  const off  = document.createElement('canvas')
+  const octx = off.getContext('2d')
+
+  if (tool === 'select' && selRect) {
+    const sr  = selRect
+    const clX = Math.max(0, sr.x)
+    const clY = Math.max(0, sr.y)
+    const clW = Math.min(sr.w, sourceImg.naturalWidth  - clX)
+    const clH = Math.min(sr.h, sourceImg.naturalHeight - clY)
+    off.width = clW; off.height = clH
+    octx.drawImage(sourceImg, clX, clY, clW, clH, 0, 0, clW, clH)
+    selBox.style.display = 'none'; selRect = null
+    document.getElementById('cropHint').textContent = 'Selecione uma área ou desenhe\ne clique em Enviar'
+  } else if (hasDrawing) {
+    off.width  = mainCvs.width
+    off.height = mainCvs.height
+    octx.drawImage(mainCvs,  0, 0)
+    octx.drawImage(drawCvs, 0, 0)
+  } else {
+    // Página/imagem inteira
+    off.width  = sourceImg.naturalWidth
+    off.height = sourceImg.naturalHeight
+    octx.drawImage(sourceImg, 0, 0)
+  }
+
+  off.toBlob(blob => {
+    const file = new File([blob], `crop-${Date.now()}.png`, { type:'image/png' })
+    receberImagem(file)
+    vOverlay.classList.remove('open')
+    addMsg('system', 'Imagem capturada do viewer — pronta para enviar.')
+  }, 'image/png')
+})
+
+// Card flutuante: arrastar
+const drag = document.getElementById('toolCardDrag')
+let dragging = false, dStartX = 0, dStartY = 0, cardX = 0, cardY = 0
+
+drag.addEventListener('mousedown', e => {
+  dragging = true
+  const r  = toolCard.getBoundingClientRect()
+  dStartX  = e.clientX - r.left
+  dStartY  = e.clientY - r.top
+  e.preventDefault()
+})
+document.addEventListener('mousemove', e => {
+  if (!dragging) return
+  const vr = vCanvas.getBoundingClientRect()
+  cardX = e.clientX - vr.left - dStartX
+  cardY = e.clientY - vr.top  - dStartY
+  toolCard.style.right  = 'auto'
+  toolCard.style.bottom = 'auto'
+  toolCard.style.left   = cardX + 'px'
+  toolCard.style.top    = cardY + 'px'
+})
+document.addEventListener('mouseup', () => { dragging = false })
+
+// Ctrl+Z — desfazer última pincelada (só quando viewer aberto)
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && vOverlay.classList.contains('open')) {
+    e.preventDefault()
+    desfazer()
+  }
+})
+
+// Resize do viewer
+new ResizeObserver(() => { if (sourceImg && vOverlay.classList.contains('open')) renderViewer() }).observe(vCanvas)
+
+// ══ CHAT ═══════════════════════════════════════════════════════════════════
 sendBtn.addEventListener('click', () => enviar())
 questionInput.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar() }
@@ -1073,43 +1357,29 @@ async function enviar(overrideQ) {
   sendBtn.disabled = true
   if (!overrideQ) { questionInput.value = ''; questionInput.style.height = 'auto' }
 
-  // Captura a imagem pendente antes de limpar
-  const imageFile   = pendingImageFile
-  const imageB64    = pendingImageBase64
-
-  // Limpa pending
-  pendingImageFile   = null
-  pendingImageBase64 = null
+  const imageFile = pendingFile
+  const imageB64  = pendingB64
+  pendingFile = null; pendingB64 = null
   inputImgPrev.classList.remove('visible')
 
-  // Bolha do usuário (com preview da imagem se tiver)
   addMsg('user', question, imageB64)
-
   const loading = addMsg('loading', '')
 
   try {
-    // Se tem imagem pendente, faz upload primeiro
     if (imageFile) {
       const fd = new FormData()
       fd.append('image', imageFile)
       fd.append('sessionId', sessionId)
-      const upRes  = await fetch('/api/image/upload', { method: 'POST', body: fd })
-      const upData = await upRes.json()
-      if (!upRes.ok) throw new Error(upData.error)
-      console.log('[enviar] upload imagem ok, sessionId:', upData.sessionId)
+      const ur = await fetch('/api/image/upload', { method:'POST', body:fd })
+      if (!ur.ok) throw new Error((await ur.json()).error)
     }
 
-    const body = { sessionId, question }
-    if (contextPage) body.page = contextPage
-
-    const res  = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+    const r    = await fetch('/api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ sessionId, question, page: currentPage || undefined })
     })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error)
-
+    const data = await r.json()
+    if (!r.ok) throw new Error(data.error)
     loading.remove()
     addMsg('assistant', data.answer)
   } catch (err) {
@@ -1122,94 +1392,61 @@ async function enviar(overrideQ) {
   }
 }
 
-// Converte markdown básico para HTML
+// ══ MENSAGENS ══════════════════════════════════════════════════════════════
 function md(text) {
   return esc(text)
-    // blocos de código ```...```
     .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-    // código inline `...`
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    // negrito **...**
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    // itálico *...*
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    // títulos ## e ###
-    .replace(/^### (.+)$/gm, '<strong style="font-size:0.95em">$1</strong>')
-    .replace(/^## (.+)$/gm,  '<strong style="font-size:1em">$1</strong>')
-    // listas - item
+    .replace(/^#{1,3} (.+)$/gm, '<strong>$1</strong>')
     .replace(/^- (.+)$/gm, '• $1')
-    // quebras de linha
     .replace(/\n/g, '<br>')
 }
 
 function addMsg(role, content, imageB64 = null) {
   if (role === 'system') {
-    const wrap = document.createElement('div')
-    wrap.className = 'msg-wrap system'
-    wrap.innerHTML = `<div class="msg-inner"><div class="msg-content">${esc(content)}</div></div>`
-    messagesEl.appendChild(wrap)
-    messagesEl.scrollTop = messagesEl.scrollHeight
-    return wrap
+    const d = document.createElement('div')
+    d.className = 'msg-wrap system'
+    d.innerHTML = `<div class="msg-inner"><div class="msg-content">${esc(content)}</div></div>`
+    messagesEl.appendChild(d); messagesEl.scrollTop = messagesEl.scrollHeight
+    return d
   }
-
   if (role === 'loading') {
-    const wrap = document.createElement('div')
-    wrap.className = 'msg-wrap assistant'
-    wrap.innerHTML = `
-      <div class="msg-inner">
-        <div class="msg-avatar">🔧</div>
-        <div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div>
-      </div>`
-    messagesEl.appendChild(wrap)
-    messagesEl.scrollTop = messagesEl.scrollHeight
-    return wrap
+    const d = document.createElement('div')
+    d.className = 'msg-wrap assistant'
+    d.innerHTML = `<div class="msg-inner"><div class="msg-avatar">🔧</div><div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div></div>`
+    messagesEl.appendChild(d); messagesEl.scrollTop = messagesEl.scrollHeight
+    return d
   }
-
-  const wrap = document.createElement('div')
-  wrap.className = `msg-wrap ${role}`
-
-  const avatar   = role === 'user' ? '👤' : '🔧'
-  const imgHtml  = imageB64 ? `<img class="msg-image" src="${imageB64}" alt="imagem"/>` : ''
-  const rendered = role === 'assistant' ? md(content) : esc(content).replace(/\n/g, '<br>')
-
-  wrap.innerHTML = `
-    <div class="msg-inner">
-      <div class="msg-avatar">${avatar}</div>
-      <div class="msg-content">${rendered}${imgHtml}</div>
-    </div>`
-
-  messagesEl.appendChild(wrap)
-  messagesEl.scrollTop = messagesEl.scrollHeight
-  return wrap
+  const d       = document.createElement('div')
+  d.className   = `msg-wrap ${role}`
+  const avatar  = role === 'user' ? '👤' : '🔧'
+  const imgHtml = imageB64 ? `<img class="msg-image" src="${imageB64}"/>` : ''
+  const body    = role === 'assistant' ? md(content) : esc(content).replace(/\n/g,'<br>')
+  d.innerHTML   = `<div class="msg-inner"><div class="msg-avatar">${avatar}</div><div class="msg-content">${body}${imgHtml}</div></div>`
+  messagesEl.appendChild(d); messagesEl.scrollTop = messagesEl.scrollHeight
+  return d
 }
 
-// ── Menu de contexto (botão direito) ─────────────────────────────────────────
-let selectedText = ''
-
+// ══ MENU DE CONTEXTO ═══════════════════════════════════════════════════════
+const ctxMenu = document.getElementById('ctxMenu')
+let selText = ''
 messagesEl.addEventListener('contextmenu', e => {
-  const sel = window.getSelection()?.toString().trim()
-  if (!sel) return
-  e.preventDefault()
-  selectedText = sel
-  const x = Math.min(e.clientX, window.innerWidth  - 210)
-  const y = Math.min(e.clientY, window.innerHeight - 90)
-  ctxMenu.style.cssText = `display:block;left:${x}px;top:${y}px`
+  const s = window.getSelection()?.toString().trim()
+  if (!s) return
+  e.preventDefault(); selText = s
+  ctxMenu.style.cssText = `display:block;left:${Math.min(e.clientX,innerWidth-210)}px;top:${Math.min(e.clientY,innerHeight-80)}px`
 })
-
-document.addEventListener('click', () => { ctxMenu.style.display = 'none' })
-
+document.addEventListener('click', () => { ctxMenu.style.display='none' })
 document.getElementById('ctxPesquisar').addEventListener('click', () => {
-  if (!selectedText || !sessionId) return
-  ctxMenu.style.display = 'none'
-  enviar(`Me explique mais sobre: "${selectedText}"`)
+  ctxMenu.style.display='none'; enviar(`Me explique mais sobre: "${selText}"`)
 })
-
 document.getElementById('ctxCopiar').addEventListener('click', () => {
-  navigator.clipboard.writeText(selectedText)
-  ctxMenu.style.display = 'none'
+  navigator.clipboard.writeText(selText); ctxMenu.style.display='none'
 })
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+// ══ INIT ═══════════════════════════════════════════════════════════════════
 carregarAparelhos()
 </script>
 </body>

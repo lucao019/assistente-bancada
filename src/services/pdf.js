@@ -15,7 +15,7 @@ const CACHE_DIR   = process.env.CACHE_DIR
  * @param {number} dpi     - Resolução da imagem (padrão 150)
  * @returns {Promise<string>} Caminho para o arquivo PNG gerado
  */
-export async function pdfPageToImage(pdfPath, page, dpi = 150) {
+export async function pdfPageToImage(pdfPath, page, dpi = 250) {
   const pdftoppm = path.join(POPPLER_BIN, 'pdftoppm.exe')
   const prefix   = path.join(CACHE_DIR, `page-${Date.now()}`)
 
