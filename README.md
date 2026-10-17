@@ -1,144 +1,149 @@
-# Assistente de Bancada 🔧
+# 🔧 Assistente de Bancada
 
-Assistente de IA local para diagnósticos eletrônicos, voltado para técnicos de manutenção de celulares e eletrônicos em geral. Roda 100% offline, sem depender de internet ou serviços externos.
-
----
-
-## Objetivo
-
-Permitir que o técnico cole ou carregue uma foto de uma placa, componente, esquemático ou erro de tela e converse com um modelo de IA multimodal para obter diagnósticos, leitura de esquemas e orientações de reparo — como ter um colega experiente de bancada disponível o tempo todo.
+> Seu assistente de IA local para diagnósticos eletrônicos — roda 100% no seu PC, sem internet, sem mensalidade.
 
 ---
 
-## Stack e ferramentas
+## O que é isso?
 
-| Camada | Tecnologia |
-|---|---|
-| Runtime | Node.js v26+ (ESM) |
-| Framework web | Express 4 |
-| Interface desktop | Electron 44 |
-| Modelo de IA (visão + texto) | Qwen2.5-VL-3B-Instruct Q4_K_M (GGUF) |
-| Servidor de inferência | llama.cpp `llama-server` (CUDA) |
-| Multimodal projection | mmproj Qwen2.5-VL-3B f16 |
-| OCR (reserva) | Tesseract 5 |
-| Conversão PDF → imagem | Poppler 26 (`pdftoppm`) |
-| Banco de dados | sql.js (SQLite puro JS, sem compilação nativa) |
-| Upload de arquivos | Multer |
-| Requisições HTTP | node-fetch 3 |
+É um programa que usa inteligência artificial para te ajudar na bancada de reparo de celulares.
+
+Você tira uma foto da placa, cola no programa, faz uma pergunta — e ele responde como um técnico experiente do seu lado.
+
+**Funciona offline.** Tudo roda na sua máquina. Nenhum dado sai do seu PC.
 
 ---
 
-## Funcionalidades implementadas
+## O que você pode fazer
 
-- **Upload de imagem** — arraste, clique ou **Ctrl+V** para colar direto do clipboard
-- **Upload de PDF** — converte página a página em imagem via Poppler (mesmo com PDFs criptografados/protegidos)
-- **Chat com visão** — imagem enviada junto com a pergunta, modelo analisa e responde
-- **Contexto de aparelho** — cada atendimento tem nome, modelo e observações iniciais
-- **Histórico persistente** — conversas salvas por aparelho no SQLite, retomadas ao reabrir
-- **Menu de contexto** — seleciona texto na resposta, clica com botão direito → "Pesquisar sobre isso"
-- **Markdown renderizado** — respostas com negrito, itálico, listas e blocos de código
-- **Interface Electron** — abre como app nativo, sem precisar de navegador
-- **Splash screen** — tela de carregamento enquanto o modelo sobe
-- **Inicialização automática** — o llama-server sobe junto com o app, com `--image-min-tokens 1024`
-- **Sidebar de aparelhos** — lista, cria, abre, limpa histórico e remove aparelhos
+- 📸 **Colar uma foto** da placa direto com Ctrl+V
+- 📄 **Abrir um esquemático em PDF** e navegar página por página
+- 🔍 **Selecionar uma área** do diagrama e perguntar sobre ela
+- ✏️ **Desenhar marcações** em cima do esquemático antes de enviar
+- 💬 **Conversar** com a IA sobre o aparelho em reparo
+- 📱 **Registrar aparelhos** com nome, modelo e observações — o histórico fica salvo
 
 ---
 
-## Estrutura do projeto
+## Requisitos
+
+Antes de instalar, você precisa ter:
+
+- ✅ **Windows 10 ou 11** (64 bits)
+- ✅ **Placa de vídeo NVIDIA** com suporte a CUDA (recomendado para boa velocidade)
+- ✅ **Node.js LTS** instalado — baixe em [nodejs.org](https://nodejs.org) e instale normalmente
+
+> Sem placa NVIDIA o programa funciona, mas fica mais lento.
+
+---
+
+## Instalação
+
+### Passo 1 — Receba a pasta do programa
+
+O programa vem como uma pasta chamada `IA`. Coloque ela em `H:\IA\` (ou ajuste o caminho no `.env` se preferir outro local).
+
+A estrutura deve ficar assim:
 
 ```
-assistente-bancada/
-├── main.cjs              # Entry point Electron (CJS)
-├── public/
-│   └── index.html        # Interface web completa (HTML + CSS + JS vanilla)
-├── src/
-│   ├── server.js         # Servidor Express (ESM)
-│   └── services/
-│       ├── llm.js        # Comunicação com llama-server (OpenAI-compatible API)
-│       ├── pdf.js        # Conversão PDF → PNG via Poppler
-│       └── db.js         # Banco SQLite via sql.js (sem binários nativos)
-├── .env                  # Caminhos dos componentes externos
-├── package.json
-├── CHANGELOG.md
-└── README.md
+H:\IA\
+├── assistente-bancada\   ← o app
+├── llama\                ← motor de IA
+├── models\               ← modelo de linguagem
+├── ocr\                  ← reconhecimento de texto
+├── poppler\              ← leitor de PDF
+├── cache\                ← pasta vazia (criada automaticamente)
+├── database\             ← pasta vazia (criada automaticamente)
+└── Iniciar.bat           ← clique aqui para abrir
 ```
+
+### Passo 2 — Instale o Node.js
+
+1. Acesse [nodejs.org](https://nodejs.org)
+2. Baixe a versão **LTS** (botão verde)
+3. Instale normalmente (Next → Next → Finish)
+
+### Passo 3 — Abra o programa
+
+Dê **duplo clique** em `H:\IA\Iniciar.bat`
+
+Na primeira vez vai demorar um pouco para instalar as dependências e carregar o modelo de IA. Depois fica mais rápido.
 
 ---
 
-## Dependências externas (fora do projeto)
+## Como usar
 
-> Ficam em `H:\IA\` e **não** são versionadas.
+### Criar um atendimento
 
-| Componente | Caminho | Uso |
-|---|---|---|
-| llama-server.exe | `H:\IA\llama\` | Servidor de inferência (llama.cpp CUDA) |
-| Qwen2.5-VL-3B Q4_K_M | `H:\IA\models\qwen2.5-vl-3b\` | Modelo de linguagem + visão |
-| mmproj f16 | `H:\IA\models\qwen2.5-vl-3b\` | Projetor multimodal (imagens) |
-| Tesseract OCR | `H:\IA\ocr\` | Extração de texto de imagens |
-| Poppler binários | `H:\IA\poppler\` | Conversão PDF → imagem |
-| Banco SQLite | `H:\IA\database\bancada.db` | Histórico de aparelhos e conversas |
-| Cache temporário | `H:\IA\cache\` | Imagens de páginas geradas |
+1. Clique em **"✏️ Novo aparelho"** na barra lateral
+2. Preencha o nome (ex: `Redmi Note 10s — sem carga`) e o modelo
+3. Clique em **"Iniciar conversa"**
 
----
+### Analisar uma imagem
 
-## Configuração (.env)
+**Opção 1 — Colar:**
+- Copie qualquer imagem (print, foto, screenshot)
+- Pressione **Ctrl+V** na janela do programa
 
-```env
-LLAMA_SERVER_URL=http://127.0.0.1:8080
-MODELS_DIR=H:\IA\models
-DOCUMENTS_DIR=H:\IA\documents
-DB_PATH=H:\IA\database\bancada.db
-CACHE_DIR=H:\IA\cache
-TESSERACT_PATH=H:\IA\ocr\tesseract.exe
-POPPLER_PATH=H:\IA\poppler\poppler-26.09.0\Library\bin
-PORT=3000
-```
+**Opção 2 — Arrastar:**
+- Arraste o arquivo de imagem para a janela
 
----
+**Opção 3 — Anexar:**
+- Clique no ícone 📎 na caixa de mensagem
 
-## Como rodar
+### Analisar um PDF (esquemático)
 
-### Modo desenvolvimento (navegador)
+1. Clique em 📎 e selecione o arquivo PDF
+2. Quando carregar, clique em **"🔍 Abrir viewer"**
+3. Navegue pelas páginas com as setas **‹ ›**
+4. Use o **scroll** do mouse para dar zoom
+5. Segure o **botão direito** para mover a imagem
 
-```powershell
-cd H:\IA\assistente-bancada
-npm install
-npm run dev       # sobe o Express em localhost:3000
-```
+### Selecionar uma área do esquemático
 
-O llama-server precisa estar rodando separadamente:
+1. No viewer, a ferramenta **⬚ Selecionar** já vem ativa
+2. Arraste um retângulo sobre a parte que quer analisar
+3. **Dê duplo clique** na seleção
+4. Digite sua pergunta na caixa que aparece
+5. Pressione Enter — a IA responde sobre aquela área específica
 
-```powershell
-H:\IA\llama\llama-server.exe `
-  -m H:\IA\models\qwen2.5-vl-3b\Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf `
-  --mmproj H:\IA\models\qwen2.5-vl-3b\mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf `
-  --port 8080 `
-  --image-min-tokens 1024
-```
+### Desenhar marcações
 
-### Modo app Electron (recomendado)
-
-```powershell
-cd H:\IA\assistente-bancada
-npm run electron  # sobe llama-server + Express + janela automaticamente
-```
-
-### Para o amigo (distribuição)
-
-Clicar duas vezes em `H:\IA\Iniciar.bat`.  
-Requerimento: Node.js LTS instalado.
+1. No viewer, clique em **✏️ Caneta**
+2. Escolha cor e espessura
+3. Desenhe em cima do esquemático
+4. Clique **"➤ Enviar para o chat"**
+5. Use **Ctrl+Z** para desfazer
 
 ---
 
-## Observações técnicas
+## Dicas
 
-- O parâmetro `--image-min-tokens 1024` é **obrigatório** para o Qwen2.5-VL processar imagens corretamente. Sem ele, o modelo ignora a imagem e pede que ela seja enviada novamente.
-- O `better-sqlite3` foi substituído por `sql.js` para evitar a necessidade de compilar binários nativos para cada versão do Electron (node-gyp + Visual Studio Build Tools).
-- PDFs com criptografia (`copy: no`) são suportados via renderização por imagem (Poppler `pdftoppm`), contornando a restrição de extração de texto.
-- O modelo roda em CUDA quando disponível. Em CPU puro, a latência por resposta é significativamente maior.
+- **Quanto menor a área selecionada, melhor a resposta** — mande só o trecho relevante, não a página inteira
+- O histórico de cada aparelho fica salvo — você pode fechar e reabrir que a conversa continua
+- Clique com o **botão direito** em qualquer resposta para opções de copiar ou pesquisar mais
 
 ---
 
-## Status
+## Problemas comuns
 
-🚧 Em desenvolvimento ativo — funcionalidades core implementadas, em fase de testes e refinamento.
+**O programa não abre / trava na splash screen**
+- Verifique se o Node.js está instalado: abra o PowerShell e digite `node --version`
+- Verifique se a pasta `H:\IA\llama\` existe e tem o arquivo `llama-server.exe`
+
+**A IA não responde / erro de conexão**
+- O modelo de IA demora para carregar na primeira vez — aguarde até 2 minutos
+- Se persistir, feche e abra novamente pelo `Iniciar.bat`
+
+**Resposta sem sentido ou repetindo palavras**
+- Tente recortar uma área menor e mais específica do esquemático
+- Evite mandar a página inteira — o modelo funciona melhor com imagens focadas
+
+---
+
+## Sobre o projeto
+
+Desenvolvido por **Lucas** para uso em bancada de reparo eletrônico.  
+Repositório: [github.com/lucao019/assistente-bancada](https://github.com/lucao019/assistente-bancada)
+
+Tecnologias usadas: Node.js · Electron · llama.cpp · Qwen2.5-VL · SQLite · Poppler · Tesseract

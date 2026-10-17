@@ -9,6 +9,125 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ---
 
+## [0.6.0] - 2026-10-16 — Correções do viewer + qualidade de resposta do modelo
+
+### Adicionado
+- **`repeat_penalty: 1.3`** no request ao llama-server — elimina loop de repetição de tokens (ex: "I2C I2C I2C..." infinito)
+- **Prompt de sistema técnico e rígido** — instrui o modelo a: ser direto, citar cada componente só uma vez, não repetir, admitir incertezas
+- **Histórico limitado a 6 mensagens** por chamada (últimas 3 trocas) — evita lotar o contexto do modelo 3B
+- **`top_p: 0.9`** para melhor controle de diversidade nas respostas
+- **Cores rápidas** no painel da caneta — 6 swatches clicáveis (vermelho, laranja, verde, azul, branco, preto)
+- **Botões visuais de espessura** da caneta — 4 tamanhos com preview do ponto proporcional ao tamanho
+- **Seletor de ponta** da caneta — Redonda (●) e Quadrada (■), afeta `lineCap` e `lineJoin` do canvas
+- **Tamanhos de borracha S/M/L/XL** estilo Paint
+- **Opções de caneta** visíveis apenas quando caneta está ativa (`#penOptions`)
+- **Opções de borracha** visíveis apenas quando borracha está ativa (`#eraseOptions`)
+- **README focado no usuário final** — linguagem simples, passo a passo de instalação e uso para técnicos sem experiência em programação
+
+### Corrigido
+- **HTML do viewer quebrado** — faltavam dois `</div>` de fechamento do `#viewerCanvas` e `#viewerOverlay`; quebrava o DOM inteiro e impedia o JS de rodar (sidebar não carregava, modal não abria)
+- **Listeners órfãos** — `btnFit`, `btnZoomIn`, `btnZoomOut`, `btnClearDraw` removidos do HTML mas ainda referenciados no JS; causavam erro silencioso na inicialização
+- **`getElementById('penSize')`** ainda chamado no código antigo após remoção do `<select>`; substituído pelos helpers `getPenSize()`, `getPenCap()`, `getEraseSize()`
+- **Viewer não fechava ao enviar** — após duplo clique + pergunta, overlay ficava aberto mostrando o recorte; agora fecha e volta pro chat automaticamente
+
+### Alterado
+- `max_tokens` reduzido de 1024 → 512 — respostas mais curtas e diretas
+- `temperature` reduzido de 0.2 → 0.1 — mais determinístico, menos alucinação
+- Card de ferramentas simplificado — removidos Ajustar, Zoom+, Zoom−, Limpar; ficaram só Selecionar, Caneta, Borracha
+- Legenda de atalhos atualizada no card
+
+---
+
+## [0.5.0] - 2026-10-16 — Viewer canvas com ferramentas e interação por seleção
+
+### Adicionado
+- **Viewer em tela cheia** — overlay sobre a interface ao clicar em "🔍 Abrir viewer"
+- **Canvas duplo** — `mainCanvas` (imagem) + `drawCanvas` (anotações sem sujar o original)
+- **Pan com botão direito** — segurar botão direito move a imagem em qualquer modo
+- **Zoom com scroll** centrado no cursor; botões `+` / `−` / `⊡ Ajustar`
+- **Seleção de área (⬚)** — retângulo verde arrastável sobre a região de interesse
+- **`selBox` acompanha pan/zoom** — reconvertido de coordenadas da imagem a cada `renderViewer()`
+- **Duplo clique na seleção** → dialog flutuante posicionado abaixo da área; digita pergunta, Enter envia recorte + pergunta ao chat
+- **Caneta (✏️)** com cursor círculo colorido proporcional à espessura
+- **Borracha (🧹)** com cursor quadrado estilo Paint
+- **Ctrl+Z** — desfaz última pincelada; stack de até 30 estados (ImageData)
+- **Card de ferramentas arrastável** pelo ícone `⠿`
+- **Barra de anexo** no chat — substitui painel lateral fixo
+- **Ferramenta padrão**: Seleção
+- **Menu de contexto nativo suprimido** no viewer (`contextmenu preventDefault`)
+
+### Alterado
+- Layout principal: sidebar + chat sem painel fixo lateral
+- DPI do Poppler: 150 → 250 — qualidade superior em esquemáticos
+
+### Corrigido
+- `selBox` não acompanhava o pan da imagem
+- Menu de contexto do browser aparecia com botão direito no viewer
+
+---
+
+## [0.3.0] - 2026-10-16 — Interface ChatGPT + histórico de aparelhos
+
+### Adicionado
+- Sidebar de aparelhos — lista, cria, abre, limpa, remove
+- Modal de novo aparelho — nome/defeito, modelo, observações
+- Histórico persistente por aparelho via SQLite (`sql.js`)
+- Contexto de aparelho no prompt do sistema
+- Menu de contexto no chat (botão direito) — "Pesquisar sobre isso"
+- Markdown renderizado — negrito, itálico, listas, código
+- Preview de imagem na bolha do usuário
+- Botão de anexar (📎)
+- Interface estilo ChatGPT
+
+### Corrigido
+- Imagem não chegava ao modelo — upload ocorre junto com o envio
+- "Aparelho: undefined" na saudação
+- Loading aparecia como HTML bruto
+- Markdown com asteriscos aparecia como texto literal
+- Rotas síncronas com funções async do banco
+
+### Trocado
+- `better-sqlite3` → `sql.js` — sem necessidade de compilar binários nativos para o Electron
+
+### Aprendido
+- Módulos com binários nativos precisam ser recompilados para cada versão do V8 interno do Electron
+
+---
+
+## [0.2.0] - 2026-10-16 — Electron + imagem + Ctrl+V
+
+### Adicionado
+- Interface Electron — janela nativa sem navegador (`main.cjs`)
+- Splash screen de carregamento
+- Inicialização automática do llama-server com parâmetros corretos
+- `--image-min-tokens 1024` — obrigatório para o Qwen2.5-VL processar imagens
+- Rota `POST /api/image/upload` — upload de imagem direta
+- Ctrl+V — cola imagem do clipboard
+- Drag & drop de arquivos
+- `Iniciar.bat` para distribuição
+- `npm run electron` — usa Electron local sem instalação global
+
+### Corrigido
+- `npm run dev` rodado na pasta errada (`H:\IA\llama`)
+- Electron tentando instalar globalmente
+- Caminhos do llama-server incorretos em dev
+
+### Aprendido
+- Sem `--image-min-tokens 1024` o Qwen2.5-VL ignora as imagens e pede para reenviar
+
+---
+
+## [0.1.0] - 2026-10-16 — Estrutura inicial
+
+### Adicionado
+- `package.json`, `.env`, `.gitignore`, `README.md`
+- Esqueleto de diretórios `src/services/` e `public/`
+- Repositório Git publicado em github.com/lucao019/assistente-bancada
+
+## [Não lançado]
+
+---
+
 ## [0.5.0] - 2026-10-16 — Viewer com canvas, ferramentas e interação por seleção
 
 ### Adicionado
